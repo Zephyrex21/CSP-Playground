@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSP Solver Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ===== CSS VARIABLES & THEMES ===== */
+        :root {
+            --font-display: 'Bricolage Grotesque', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --radius: 20px;
+            --radius-sm: 12px;
+            --radius-xs: 8px;
+            --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        [data-theme="dark"] {
+            --bg: #060A14;
+            --bg-secondary: #0C1222;
+            --fg: #E4E9F0;
+            --fg-muted: #5C6B82;
+            --accent: #00E5FF;
+            --accent-rgb: 0, 229, 255;
+            --accent-glow: rgba(0, 229, 255, 0.12);
+            --accent-deep: #00B8D4;
+            --accent-secondary: #A855F7;
+            --accent-secondary-rgb: 168, 85, 247;
+            --accent-secondary-glow: rgba(168, 85, 247, 0.12);
+            --gradient-main: linear-gradient(135deg, #00E5FF 0%, #3B82F6 45%, #A855F7 100%);
+            --gradient-btn: linear-gradient(135deg, #00E5FF 0%, #7C3AED 100%);
+            --card: rgba(12, 18, 40, 0.55);
+            --card-hover: rgba(16, 24, 50, 0.7);
+            --card-border: rgba(100, 140, 200, 0.08);
+            --card-border-hover: rgba(0, 229, 255, 0.2);
+            --input-bg: rgba(12, 18, 40, 0.5);
+            --input-border: rgba(100, 140, 200, 0.12);
+            --input-focus-border: rgba(0, 229, 255, 0.5);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --overlay: rgba(6, 10, 20, 0.7);
+            --sudoku-given: rgba(0, 229, 255, 0.08);
+            --sudoku-solved: rgba(168, 85, 247, 0.1);
+            --queen-color: #00E5FF;
+            --cell-light: rgba(255, 255, 255, 0.05);
+            --cell-dark: rgba(0, 0, 0, 0.15);
+            --danger: #F43F5E;
+            --success: #10B981;
+        }
+
+        [data-theme="light"] {
+            --bg: #F0F4FA;
+            --bg-secondary: #E4EAF3;
+            --fg: #0C1322;
+            --fg-muted: #5C6B82;
+            --accent: #0891B2;
+            --accent-rgb: 8, 145, 178;
+            --accent-glow: rgba(8, 145, 178, 0.1);
+            --accent-deep: #0E7490;
+            --accent-secondary: #7C3AED;
+            --accent-secondary-rgb: 124, 58, 237;
+            --accent-secondary-glow: rgba(124, 58, 237, 0.08);
+            --gradient-main: linear-gradient(135deg, #0891B2 0%, #3B82F6 45%, #7C3AED 100%);
+            --gradient-btn: linear-gradient(135deg, #0891B2 0%, #7C3AED 100%);
+            --card: rgba(255, 255, 255, 0.5);
+            --card-hover: rgba(255, 255, 255, 0.72);
+            --card-border: rgba(12, 19, 34, 0.06);
+            --card-border-hover: rgba(8, 145, 178, 0.25);
+            --input-bg: rgba(255, 255, 255, 0.6);
+            --input-border: rgba(12, 19, 34, 0.1);
+            --input-focus-border: rgba(8, 145, 178, 0.5);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
+            --overlay: rgba(240, 244, 250, 0.75);
+            --sudoku-given: rgba(8, 145, 178, 0.07);
+            --sudoku-solved: rgba(124, 58, 237, 0.07);
+            --queen-color: #0891B2;
+            --cell-light: rgba(255, 255, 255, 0.9);
+            --cell-dark: rgba(0, 0, 0, 0.03);
+            --danger: #E11D48;
+            --success: #059669;
+        }
+
+        /* ===== RESET ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background var(--transition), color var(--transition);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle at 1px 1px, var(--card-border) 0.8px, transparent 0);
+            background-size: 32px 32px;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== FLOATING ORBS ===== */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb-1 {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(var(--accent-rgb), 0.3) 0%, transparent 70%);
+            top: -200px; left: -150px;
+            animation: orbF1 28s ease-in-out infinite;
+        }
+        .orb-2 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(var(--accent-secondary-rgb), 0.25) 0%, transparent 70%);
+            bottom: -150px; right: -120px;
+            animation: orbF2 22s ease-in-out infinite;
+        }
+        .orb-3 {
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            top: 45%; left: 55%;
+            opacity: 0.6;
+            animation: orbF3 32s ease-in-out infinite;
+        }
+        @keyframes orbF1 {
+            0%,100%{transform:translate(0,0) scale(1)}
+            33%{transform:translate(100px,80px) scale(1.15)}
+            66%{transform:translate(-50px,120px) scale(0.9)}
+        }
+        @keyframes orbF2 {
+            0%,100%{transform:translate(0,0) scale(1)}
+            33%{transform:translate(-80px,-100px) scale(1.2)}
+            66%{transform:translate(60px,-50px) scale(0.85)}
+        }
+        @keyframes orbF3 {
+            0%,100%{transform:translate(-50%,-50%) scale(1)}
+            50%{transform:translate(-30%,-60%) scale(1.4)}
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px; height: 68px;
+            background: var(--card);
+            backdrop-filter: blur(28px) saturate(1.4);
+            -webkit-backdrop-filter: blur(28px) saturate(1.4);
+            border-bottom: 1px solid var(--card-border);
+            transition: background var(--transition);
+        }
+        .nav-brand {
+            font-family: var(--font-display);
+            font-weight: 800; font-size: 1.18rem;
+            background: var(--gradient-main);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+        }
+        .nav-brand i { margin-right: 8px; font-size: 0.95rem; }
+        .nav-tabs {
+            display: flex; gap: 4px;
+            overflow-x: auto; scrollbar-width: none;
+        }
+        .nav-tabs::-webkit-scrollbar { display: none; }
+        .nav-tab {
+            position: relative;
+            font-family: var(--font-display);
+            font-size: 0.82rem; font-weight: 600;
+            padding: 8px 18px; border: none; background: none;
+            color: var(--fg-muted); cursor: pointer;
+            border-radius: var(--radius-xs);
+            transition: color 0.3s, background 0.3s;
+            white-space: nowrap;
+            letter-spacing: 0.01em;
+        }
+        .nav-tab:hover { color: var(--fg); background: var(--card-hover); }
+        .nav-tab.active { color: var(--accent); }
+        .nav-tab::after {
+            content: ''; position: absolute;
+            bottom: 2px; left: 50%; width: 50%; height: 2px;
+            background: var(--gradient-main);
+            border-radius: 2px;
+            transform: translateX(-50%) scaleX(0);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .nav-tab.active::after { transform: translateX(-50%) scaleX(1); }
+        .theme-btn {
+            width: 42px; height: 42px;
+            border: 1px solid var(--card-border);
+            border-radius: 50%; background: var(--card);
+            backdrop-filter: blur(10px);
+            color: var(--fg-muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.95rem; transition: all 0.35s; flex-shrink: 0;
+        }
+        .theme-btn:hover {
+            background: var(--card-hover);
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: rotate(25deg) scale(1.05);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        /* ===== GLASS CARD ===== */
+        .glass-card {
+            position: relative;
+            background: var(--card);
+            backdrop-filter: blur(24px) saturate(1.3);
+            -webkit-backdrop-filter: blur(24px) saturate(1.3);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow: hidden;
+        }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: var(--gradient-main);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        .glass-card:hover {
+            background: var(--card-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2),
+                        0 0 40px -10px var(--accent-glow);
+        }
+        .glass-card:hover::before { opacity: 1; }
+
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            font-family: var(--font-display);
+            font-weight: 700; font-size: 0.88rem;
+            padding: 13px 30px; border: none;
+            border-radius: var(--radius-sm);
+            background: var(--gradient-btn);
+            color: #fff; cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-flex; align-items: center; gap: 8px;
+            letter-spacing: 0.02em;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 32px rgba(var(--accent-rgb), 0.3),
+                        0 0 60px -10px rgba(var(--accent-secondary-rgb), 0.2);
+        }
+        .btn-primary:hover::after { opacity: 1; }
+        .btn-primary:active { transform: translateY(-1px) scale(0.98); }
+
+        .btn-secondary {
+            font-family: var(--font-display);
+            font-weight: 600; font-size: 0.88rem;
+            padding: 13px 28px;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sm);
+            background: var(--card);
+            backdrop-filter: blur(10px);
+            color: var(--fg-muted); cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex; align-items: center; gap: 8px;
+            letter-spacing: 0.01em;
+        }
+        .btn-secondary:hover {
+            border-color: var(--card-border-hover);
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(var(--accent-rgb), 0.1);
+            background: var(--card-hover);
+        }
+
+        .btn-icon {
+            width: 36px; height: 36px;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-xs);
+            background: var(--card);
+            color: var(--fg-muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.78rem; transition: all 0.3s;
+        }
+        .btn-icon:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--card-hover);
+            box-shadow: 0 0 16px var(--accent-glow);
+        }
+
+        /* ===== INPUTS ===== */
+        .input-field {
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            padding: 11px 16px;
+            border: 1px solid var(--input-border);
+            border-radius: var(--radius-sm);
+            background: var(--input-bg);
+            backdrop-filter: blur(10px);
+            color: var(--fg);
+            transition: all 0.3s;
+            outline: none; width: 100%;
+        }
+        .input-field:focus {
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 4px var(--accent-glow),
+                        0 0 20px -4px rgba(var(--accent-rgb), 0.15);
+        }
+        .input-field::placeholder { color: var(--fg-muted); opacity: 0.5; }
+
+        /* ===== TYPOGRAPHY ===== */
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+            font-weight: 800; letter-spacing: -0.025em;
+            margin-bottom: 8px; line-height: 1.15;
+        }
+        .section-desc {
+            color: var(--fg-muted); font-size: 0.95rem;
+            max-width: 620px; line-height: 1.75;
+        }
+        .badge {
+            font-family: var(--font-display);
+            font-size: 0.68rem; font-weight: 700;
+            padding: 5px 14px; border-radius: 100px;
+            text-transform: uppercase; letter-spacing: 0.08em;
+        }
+        .badge-accent {
+            background: var(--accent-glow);
+            color: var(--accent);
+            border: 1px solid rgba(var(--accent-rgb), 0.2);
+        }
+        .badge-secondary {
+            background: var(--accent-secondary-glow);
+            color: var(--accent-secondary);
+            border: 1px solid rgba(var(--accent-secondary-rgb), 0.2);
+        }
+        .text-accent { color: var(--accent); }
+        .text-muted { color: var(--fg-muted); }
+        .text-secondary { color: var(--accent-secondary); }
+        .text-center { text-align: center; }
+        .mt-12 { margin-top: 12px; }
+        .mt-16 { margin-top: 16px; }
+        .mb-16 { margin-bottom: 16px; }
+
+        /* ===== SECTIONS ===== */
+        main {
+            position: relative; z-index: 1;
+            max-width: 1120px; margin: 0 auto;
+            padding: 96px 24px 72px; min-height: 100vh;
+        }
+        .section {
+            display: none; opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+        .section.active {
+            display: block; opacity: 1; transform: translateY(0);
+        }
+
+        /* ===== HOME PAGE ===== */
+        .hero { text-align: center; padding: 56px 0 36px; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+        .hero-badge .badge {
+            animation: badgePulse 3s ease-in-out infinite;
+        }
+        @keyframes badgePulse {
+            0%,100%{ box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.2); }
+            50%{ box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0); }
+        }
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 800; letter-spacing: -0.035em; line-height: 1.02;
+            margin-bottom: 20px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+        .hero-title::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 120%; height: 140%;
+            transform: translate(-50%, -50%);
+            background: var(--gradient-main);
+            opacity: 0.12;
+            filter: blur(60px);
+            z-index: -1;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.18rem);
+            color: var(--fg-muted); max-width: 560px;
+            margin: 0 auto; line-height: 1.8;
+            font-weight: 400;
+        }
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px; margin: 56px 0;
+        }
+        .concept-card { padding: 28px; }
+        .concept-icon {
+            width: 52px; height: 52px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; margin-bottom: 20px;
+            position: relative;
+        }
+        .concept-icon.variables {
+            background: var(--accent-glow);
+            color: var(--accent);
+            box-shadow: 0 0 24px rgba(var(--accent-rgb), 0.15);
+        }
+        .concept-icon.domains {
+            background: var(--accent-secondary-glow);
+            color: var(--accent-secondary);
+            box-shadow: 0 0 24px rgba(var(--accent-secondary-rgb), 0.15);
+        }
+        .concept-icon.constraints {
+            background: rgba(244, 63, 94, 0.12);
+            color: var(--danger);
+            box-shadow: 0 0 24px rgba(244, 63, 94, 0.1);
+        }
+        .concept-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.15rem; font-weight: 700; margin-bottom: 10px;
+            letter-spacing: -0.01em;
+        }
+        .concept-card p { color: var(--fg-muted); font-size: 0.9rem; line-height: 1.7; }
+        .solvers-heading {
+            font-family: var(--font-display); font-size: 1.1rem;
+            font-weight: 700; text-align: center;
+            margin: 56px 0 28px; color: var(--fg-muted);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .solvers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 24px;
+        }
+        .solver-card { padding: 32px; cursor: pointer; text-align: left; }
+        .solver-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 56px rgba(0, 0, 0, 0.25),
+                        0 0 50px -12px rgba(var(--accent-rgb), 0.2);
+        }
+        .solver-card-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+        .solver-card-icon {
+            width: 48px; height: 48px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.15rem; flex-shrink: 0;
+        }
+        .solver-card-icon.sudoku {
+            background: var(--accent-glow); color: var(--accent);
+            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.15);
+        }
+        .solver-card-icon.queens {
+            background: var(--accent-secondary-glow); color: var(--accent-secondary);
+            box-shadow: 0 0 20px rgba(var(--accent-secondary-rgb), 0.15);
+        }
+        .solver-card-icon.timetable {
+            background: rgba(251, 146, 60, 0.12); color: #FB923C;
+            box-shadow: 0 0 20px rgba(251, 146, 60, 0.1);
+        }
+        .solver-card-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.1rem; font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        .solver-card-header span {
+            display: block; font-size: 0.72rem; color: var(--fg-muted);
+            font-weight: 500; margin-top: 3px; letter-spacing: 0.03em;
+        }
+        .solver-card p { color: var(--fg-muted); font-size: 0.88rem; line-height: 1.65; }
+        .card-arrow {
+            display: flex; align-items: center; gap: 8px; margin-top: 20px;
+            font-family: var(--font-display); font-size: 0.84rem; font-weight: 700;
+            background: var(--gradient-main);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0; transform: translateX(-10px);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .solver-card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+
+        /* ===== SUDOKU ===== */
+        .sudoku-layout { display: grid; grid-template-columns: 1fr; gap: 36px; align-items: start; }
+        @media(min-width:768px){ .sudoku-layout { grid-template-columns: auto 1fr; } }
+        .sudoku-grid-wrapper { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+        .sudoku-grid {
+            display: grid; grid-template-columns: repeat(9, 1fr);
+            border: 2px solid rgba(var(--accent-rgb), 0.4);
+            border-radius: var(--radius-sm);
+            overflow: hidden; width: 100%; max-width: 410px;
+            box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.06);
+        }
+        .sudoku-cell {
+            width: 100%; aspect-ratio: 1;
+            border: 1px solid var(--card-border);
+            background: transparent; color: var(--fg);
+            font-family: var(--font-display);
+            font-size: clamp(0.9rem, 2.5vw, 1.15rem);
+            font-weight: 700; text-align: center; outline: none;
+            transition: background 0.25s, box-shadow 0.25s, color 0.25s;
+            -moz-appearance: textfield;
+        }
+        .sudoku-cell::-webkit-inner-spin-button,
+        .sudoku-cell::-webkit-outer-spin-button { -webkit-appearance: none; }
+        .sudoku-cell:focus {
+            background: rgba(var(--accent-rgb), 0.08);
+            box-shadow: inset 0 0 0 2px rgba(var(--accent-rgb), 0.5),
+                        0 0 16px rgba(var(--accent-rgb), 0.1);
+            z-index: 2; position: relative;
+        }
+        .sudoku-cell.thick-left { border-left: 2px solid rgba(var(--accent-rgb), 0.35); }
+        .sudoku-cell.thick-top { border-top: 2px solid rgba(var(--accent-rgb), 0.35); }
+        .sudoku-cell.given {
+            background: var(--sudoku-given);
+            color: var(--accent);
+        }
+        .sudoku-cell.solved {
+            background: var(--sudoku-solved);
+            color: var(--accent-secondary);
+            animation: cellReveal 0.35s ease-out both;
+        }
+        @keyframes cellReveal {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .sudoku-controls { display: flex; flex-wrap: wrap; gap: 12px; }
+        .sudoku-info { display: flex; flex-direction: column; gap: 24px; }
+        .sudoku-info h2 {
+            font-family: var(--font-display);
+            font-size: 1.35rem; font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        .sudoku-steps { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+        .sudoku-steps li {
+            display: flex; align-items: flex-start; gap: 12px;
+            color: var(--fg-muted); font-size: 0.9rem; line-height: 1.6;
+        }
+        .step-num {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: var(--accent-glow);
+            border: 1px solid rgba(var(--accent-rgb), 0.15);
+            color: var(--accent);
+            font-family: var(--font-display); font-size: 0.72rem; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; margin-top: 1px;
+        }
+        .constraints-note {
+            font-size: 0.82rem; color: var(--fg-muted);
+            padding: 16px 18px;
+            border-left: 3px solid var(--accent);
+            background: var(--accent-glow);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            line-height: 1.7;
+        }
+        .constraints-note strong { color: var(--fg); }
+
+        /* ===== N-QUEENS ===== */
+        .queens-layout { display: flex; flex-direction: column; gap: 32px; align-items: center; }
+        .queens-input-area { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .queens-input-area label { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; }
+        .queens-input-area .input-field { width: 80px; text-align: center; }
+        .queens-controls { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+        .queens-board {
+            display: grid;
+            border: 2px solid rgba(var(--accent-rgb), 0.35);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            max-width: 500px; width: 100%;
+            box-shadow: 0 0 50px rgba(var(--accent-rgb), 0.05);
+        }
+        .queen-cell {
+            aspect-ratio: 1; display: flex; align-items: center;
+            justify-content: center; font-size: clamp(1rem, 3vw, 1.8rem);
+            transition: all 0.3s; position: relative;
+        }
+        .queen-cell.light { background: var(--cell-light); }
+        .queen-cell.dark { background: var(--cell-dark); }
+        .queen-cell.queen-placed {
+            color: var(--queen-color);
+            filter: drop-shadow(0 0 8px rgba(var(--accent-rgb), 0.5));
+            animation: queenPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes queenPop {
+            0%{transform:scale(0) rotate(-30deg);opacity:0}
+            60%{transform:scale(1.15) rotate(5deg);opacity:1}
+            100%{transform:scale(1) rotate(0deg);opacity:1}
+        }
+        .queens-stats { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+        .stat-item { text-align: center; padding: 20px 32px; }
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 2rem; font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label { font-size: 0.78rem; color: var(--fg-muted); margin-top: 4px; font-weight: 500; letter-spacing: 0.02em; }
+
+        /* ===== TIMETABLE ===== */
+        .timetable-layout { display: grid; grid-template-columns: 1fr; gap: 32px; align-items: start; }
+        @media(min-width:900px){ .timetable-layout { grid-template-columns: 360px 1fr; } }
+        .timetable-input-panel { display: flex; flex-direction: column; gap: 20px; }
+        .subject-list {
+            display: flex; flex-direction: column; gap: 10px;
+            max-height: 340px; overflow-y: auto; padding-right: 4px;
+        }
+        .subject-list::-webkit-scrollbar { width: 4px; }
+        .subject-list::-webkit-scrollbar-track { background: transparent; }
+        .subject-list::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+        .subject-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 14px; border-radius: var(--radius-sm);
+            background: var(--input-bg); border: 1px solid var(--input-border);
+            font-size: 0.85rem; transition: all 0.25s;
+        }
+        .subject-item:hover {
+            border-color: var(--card-border-hover);
+            background: var(--card-hover);
+        }
+        .subject-color-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .subject-item-info { flex: 1; min-width: 0; }
+        .subject-item-name { font-weight: 700; font-size: 0.85rem; font-family: var(--font-display); }
+        .subject-item-teacher { font-size: 0.74rem; color: var(--fg-muted); }
+        .add-subject-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
+        .form-group label { display: block; font-size: 0.76rem; font-weight: 600; color: var(--fg-muted); margin-bottom: 5px; letter-spacing: 0.03em; }
+        .timetable-config { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .timetable-config label { font-size: 0.85rem; color: var(--fg-muted); font-weight: 600; }
+        .timetable-config .input-field { width: 72px; text-align: center; }
+        .timetable-controls { display: flex; gap: 12px; flex-wrap: wrap; }
+        .timetable-output { overflow-x: auto; }
+        .timetable-table {
+            width: 100%; border-collapse: separate; border-spacing: 4px; font-size: 0.85rem;
+        }
+        .timetable-table th {
+            font-family: var(--font-display); font-weight: 700; font-size: 0.75rem;
+            text-transform: uppercase; letter-spacing: 0.06em;
+            padding: 12px 10px; color: var(--fg-muted); text-align: center;
+        }
+        .timetable-table td {
+            padding: 0; border-radius: var(--radius-xs); text-align: center;
+            min-width: 105px; height: 64px; vertical-align: middle; transition: all 0.3s;
+        }
+        .timetable-table td.empty-cell { background: var(--input-bg); opacity: 0.35; }
+        .timetable-table td.filled-cell { padding: 8px 10px; cursor: default; }
+        .filled-cell-subject { font-weight: 700; font-size: 0.82rem; margin-bottom: 3px; font-family: var(--font-display); }
+        .filled-cell-teacher { font-size: 0.7rem; opacity: 0.65; }
+        .timetable-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.76rem; color: var(--fg-muted); font-weight: 500; }
+        .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        /* ===== LOADING OVERLAY ===== */
+        .loading-overlay {
+            position: fixed; inset: 0; background: var(--overlay);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 200; opacity: 0; visibility: hidden;
+            transition: opacity 0.35s, visibility 0s 0.35s;
+        }
+        .loading-overlay.active { opacity: 1; visibility: visible; transition: opacity 0.35s, visibility 0s 0s; }
+        .loading-card {
+            padding: 40px 52px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 24px;
+        }
+        .spinner {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, var(--accent));
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+            animation: spin 0.8s linear infinite;
+            position: relative;
+        }
+        .spinner::after {
+            content: '';
+            position: absolute; inset: -6px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: var(--accent-secondary);
+            animation: spin 1.2s linear infinite reverse;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text {
+            font-family: var(--font-display); font-weight: 700;
+            font-size: 0.95rem; color: var(--fg);
+            letter-spacing: 0.01em;
+        }
+
+        /* ===== TOASTS ===== */
+        .toast-container {
+            position: fixed; bottom: 28px; right: 28px; z-index: 300;
+            display: flex; flex-direction: column; gap: 12px; pointer-events: none;
+        }
+        .toast {
+            pointer-events: auto; padding: 16px 22px;
+            border-radius: var(--radius-sm);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            display: flex; align-items: center; gap: 12px;
+            font-size: 0.86rem; font-weight: 500; max-width: 400px;
+            animation: toastIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+        .toast.removing { animation: toastOut 0.35s ease-in forwards; }
+        .toast.success {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+        }
+        .toast.error {
+            background: rgba(244, 63, 94, 0.12);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            color: #fb7185;
+        }
+        .toast.info {
+            background: rgba(var(--accent-rgb), 0.1);
+            border: 1px solid rgba(var(--accent-rgb), 0.3);
+            color: var(--accent);
+        }
+        @keyframes toastIn { 0%{transform:translateX(120px) scale(0.9);opacity:0} 100%{transform:translateX(0) scale(1);opacity:1} }
+        @keyframes toastOut { 0%{transform:translateX(0) scale(1);opacity:1} 100%{transform:translateX(120px) scale(0.9);opacity:0} }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in { animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+        .delay-1 { animation-delay: 0.08s; }
+        .delay-2 { animation-delay: 0.16s; }
+        .delay-3 { animation-delay: 0.24s; }
+        .delay-4 { animation-delay: 0.32s; }
+
+        /* ===== RESPONSIVE ===== */
+        @media(max-width:768px){
+            nav { padding: 0 16px; gap: 8px; }
+            .nav-brand { font-size: 1rem; }
+            .nav-tab { padding: 7px 12px; font-size: 0.78rem; }
+            main { padding: 84px 16px 48px; }
+            .glass-card { padding: 24px; }
+            .hero { padding: 40px 0 24px; }
+            .add-subject-form { grid-template-columns: 1fr; }
+            .sudoku-grid { max-width: 360px; }
+        }
+        @media(max-width:480px){
+            .nav-brand span { display: none; }
+            .sudoku-grid { max-width: 320px; }
+            .queens-board { max-width: 340px; }
+            .stat-item { padding: 16px 20px; }
+        }
+        @media(prefers-reduced-motion:reduce){
+            *,*::before,*::after { animation-duration:0.01ms!important; transition-duration:0.01ms!important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+    <div class="orb orb-3" aria-hidden="true"></div>
+
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="nav-brand">
+            <i class="fas fa-brain"></i>
+            <span>CSP Playground AI</span>
+        </div>
+        <div class="nav-tabs" role="tablist">
+            <button class="nav-tab active" data-target="home" role="tab" aria-selected="true">
+                <i class="fas fa-home" style="margin-right:5px;font-size:0.78em"></i> Home
+            </button>
+            <button class="nav-tab" data-target="sudoku" role="tab" aria-selected="false">
+                <i class="fas fa-table-cells" style="margin-right:5px;font-size:0.78em"></i> Sudoku
+            </button>
+            <button class="nav-tab" data-target="queens" role="tab" aria-selected="false">
+                <i class="fas fa-chess-queen" style="margin-right:5px;font-size:0.78em"></i> N-Queens
+            </button>
+            <button class="nav-tab" data-target="timetable" role="tab" aria-selected="false">
+                <i class="fas fa-calendar-days" style="margin-right:5px;font-size:0.78em"></i> Timetable
+            </button>
+        </div>
+        <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
+            <i class="fas fa-moon"></i>
+        </button>
+    </nav>
+
+    <main>
+
+        <section id="home" class="section active" role="tabpanel">
+            <div class="hero">
+                <div class="hero-badge">
+                    <span class="badge badge-accent">Constraint Satisfaction</span>
+                </div>
+                <h1 class="hero-title">CSP Playground</h1>
+                <p class="hero-subtitle">
+                    Explore the power of Constraint Satisfaction Problems through
+                    interactive solvers for Sudoku, N-Queens, and Timetable Scheduling.
+                </p>
+            </div>
+
+            <div class="concepts-grid">
+                <div class="glass-card concept-card animate-in delay-1">
+                    <div class="concept-icon variables"><i class="fas fa-cube"></i></div>
+                    <h3>Variables</h3>
+                    <p>The unknowns we need to determine. In Sudoku, each empty cell is a variable. In N-Queens, each row's queen position. In scheduling, each subject's time slot.</p>
+                </div>
+                <div class="glass-card concept-card animate-in delay-2">
+                    <div class="concept-icon domains"><i class="fas fa-list-check"></i></div>
+                    <h3>Domains</h3>
+                    <p>The set of possible values for each variable. A Sudoku cell can hold 1-9, a queen can be placed in any column, and a subject can occupy any available slot.</p>
+                </div>
+                <div class="glass-card concept-card animate-in delay-3">
+                    <div class="concept-icon constraints"><i class="fas fa-link-slash"></i></div>
+                    <h3>Constraints</h3>
+                    <p>Rules that restrict variable assignments. No duplicate numbers in a row, no attacking queens, no teacher conflicts. Constraints define the problem's logic.</p>
+                </div>
+            </div>
+
+            <p class="solvers-heading">Explore the Solvers</p>
+            <div class="solvers-grid">
+                <div class="glass-card solver-card animate-in delay-1" data-navigate="sudoku" tabindex="0" role="button">
+                    <div class="solver-card-header">
+                        <div class="solver-card-icon sudoku"><i class="fas fa-table-cells"></i></div>
+                        <div><h3>Sudoku Solver</h3><span>Backtracking CSP</span></div>
+                    </div>
+                    <p>Fill a 9x9 grid so every row, column, and 3x3 block contains digits 1-9 exactly once. Watch the backtracking algorithm find the solution.</p>
+                    <div class="card-arrow">Try it <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="glass-card solver-card animate-in delay-2" data-navigate="queens" tabindex="0" role="button">
+                    <div class="solver-card-header">
+                        <div class="solver-card-icon queens"><i class="fas fa-chess-queen"></i></div>
+                        <div><h3>N-Queens Solver</h3><span>Backtracking CSP</span></div>
+                    </div>
+                    <p>Place N queens on an NxN board so no two queens attack each other. Choose any board size and see all valid configurations.</p>
+                    <div class="card-arrow">Try it <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="glass-card solver-card animate-in delay-3" data-navigate="timetable" tabindex="0" role="button">
+                    <div class="solver-card-header">
+                        <div class="solver-card-icon timetable"><i class="fas fa-calendar-days"></i></div>
+                        <div><h3>Timetable Scheduler</h3><span>Constraint-Based CSP</span></div>
+                    </div>
+                    <p>Assign subjects to time slots respecting teacher conflicts and scheduling rules. Build your own timetable with custom constraints.</p>
+                    <div class="card-arrow">Try it <i class="fas fa-arrow-right"></i></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sudoku" class="section" role="tabpanel">
+            <h2 class="section-title">Sudoku Solver</h2>
+            <p class="section-desc mb-16">Enter a puzzle or load a sample. The backtracking algorithm will find the unique solution respecting all row, column, and block constraints.</p>
+            <div class="sudoku-layout">
+                <div class="sudoku-grid-wrapper">
+                    <div class="sudoku-grid" id="sudoku-grid" role="grid" aria-label="Sudoku puzzle grid"></div>
+                    <div class="sudoku-controls">
+                        <button class="btn-primary" id="sudoku-solve-btn"><i class="fas fa-wand-magic-sparkles"></i> Solve</button>
+                        <button class="btn-secondary" id="sudoku-sample-btn"><i class="fas fa-dice"></i> Load Sample</button>
+                        <button class="btn-secondary" id="sudoku-clear-btn"><i class="fas fa-eraser"></i> Clear</button>
+                    </div>
+                </div>
+                <div class="sudoku-info glass-card">
+                    <h2><i class="fas fa-lightbulb text-accent" style="margin-right:10px"></i>How it works</h2>
+                    <ol class="sudoku-steps">
+                        <li><span class="step-num">1</span><span><strong style="color:var(--fg)">Variables:</strong> Each of the 81 cells in the 9x9 grid</span></li>
+                        <li><span class="step-num">2</span><span><strong style="color:var(--fg)">Domains:</strong> Digits 1 through 9 for each empty cell</span></li>
+                        <li><span class="step-num">3</span><span><strong style="color:var(--fg)">Constraints:</strong> No duplicate in any row, column, or 3x3 sub-grid</span></li>
+                        <li><span class="step-num">4</span><span><strong style="color:var(--fg)">Algorithm:</strong> Backtracking — try a value, recurse, undo if stuck</span></li>
+                    </ol>
+                    <div class="constraints-note mt-16">
+                        <strong>Tip:</strong> Use only digits 1-9. Leave empty cells blank. Invalid puzzles (duplicate givens) will be detected automatically.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="queens" class="section" role="tabpanel">
+            <h2 class="section-title text-center">N-Queens Solver</h2>
+            <p class="section-desc text-center" style="margin:0 auto 28px">Place N queens on an NxN chessboard so that no two queens threaten each other. The solver finds all solutions using backtracking.</p>
+            <div class="queens-layout">
+                <div class="queens-input-area">
+                    <label for="n-input">Board Size (N):</label>
+                    <input type="number" id="n-input" class="input-field" value="8" min="1" max="16" aria-label="Number of queens">
+                    <button class="btn-primary" id="queens-solve-btn"><i class="fas fa-chess-queen"></i> Solve</button>
+                    <button class="btn-secondary" id="queens-clear-btn"><i class="fas fa-eraser"></i> Clear</button>
+                </div>
+                <div class="queens-stats" id="queens-stats" style="display:none">
+                    <div class="glass-card stat-item">
+                        <div class="stat-value" id="queens-solution-count">0</div>
+                        <div class="stat-label">Solutions Found</div>
+                    </div>
+                    <div class="glass-card stat-item">
+                        <div class="stat-value" id="queens-board-size">0</div>
+                        <div class="stat-label">Board Size</div>
+                    </div>
+                </div>
+                <div class="queens-board" id="queens-board" aria-label="N-Queens chessboard"></div>
+                <div class="constraints-note" style="max-width:520px;text-align:center">
+                    <strong>Constraints:</strong> No two queens share the same column, row, or diagonal. Each solution places exactly N queens with zero conflicts.
+                </div>
+            </div>
+        </section>
+
+        <section id="timetable" class="section" role="tabpanel">
+            <h2 class="section-title">Timetable Scheduler</h2>
+            <p class="section-desc mb-16">Define subjects and their teachers, then generate an optimal timetable that satisfies all scheduling constraints.</p>
+            <div class="timetable-layout">
+                <div class="timetable-input-panel">
+                    <div class="glass-card">
+                        <h3 style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:14px">
+                            <i class="fas fa-book text-accent" style="margin-right:8px"></i> Subjects & Teachers
+                        </h3>
+                        <div class="subject-list" id="subject-list"></div>
+                        <div class="add-subject-form mt-12">
+                            <div class="form-group">
+                                <label for="new-subject">Subject</label>
+                                <input type="text" id="new-subject" class="input-field" placeholder="e.g. Mathematics">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-teacher">Teacher</label>
+                                <input type="text" id="new-teacher" class="input-field" placeholder="e.g. Mr. Smith">
+                            </div>
+                            <button class="btn-icon" id="add-subject-btn" aria-label="Add subject" style="height:40px;margin-bottom:0">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:14px">
+                            <i class="fas fa-sliders text-secondary" style="margin-right:8px"></i> Configuration
+                        </h3>
+                        <div class="timetable-config">
+                            <label for="periods-input">Periods per day:</label>
+                            <input type="number" id="periods-input" class="input-field" value="3" min="1" max="8">
+                        </div>
+                        <div class="constraints-note mt-16">
+                            <strong>Constraints:</strong><br>
+                            1. Each subject gets exactly one slot<br>
+                            2. No two subjects share the same slot<br>
+                            3. Same teacher cannot teach in consecutive periods on the same day
+                        </div>
+                    </div>
+                    <div class="timetable-controls">
+                        <button class="btn-primary" id="timetable-generate-btn"><i class="fas fa-calendar-check"></i> Generate</button>
+                        <button class="btn-secondary" id="timetable-clear-btn"><i class="fas fa-eraser"></i> Reset All</button>
+                    </div>
+                </div>
+                <div class="glass-card">
+                    <h3 style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:18px">
+                        <i class="fas fa-table-columns text-accent" style="margin-right:8px"></i> Generated Timetable
+                    </h3>
+                    <div class="timetable-output" id="timetable-output">
+                        <p class="text-muted text-center" style="padding:48px 0">
+                            <i class="fas fa-calendar-xmark" style="font-size:2.2rem;display:block;margin-bottom:14px;opacity:0.2"></i>
+                            Configure your subjects and click Generate to create a timetable.
+                        </p>
+                    </div>
+                    <div class="timetable-legend" id="timetable-legend" style="display:none"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="loading-overlay" id="loading-overlay" aria-hidden="true">
+        <div class="glass-card loading-card">
+            <div class="spinner"></div>
+            <div class="loading-text" id="loading-text">Solving...</div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+
+    <script>
+    /* ================================================================
+       CSP SOLVER HUB — Complete Application JavaScript
+       ================================================================ */
+
+    // ============================================================
+    // 1. UTILITY HELPERS
+    // ============================================================
+
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(text));
+        return div.innerHTML;
+    }
+
+
+    // ============================================================
+    // 2. THEME MANAGEMENT
+    // ============================================================
+
+    var themeToggle = document.getElementById('theme-toggle');
+    var themeIcon = themeToggle.querySelector('i');
+
+    function loadTheme() {
+        var saved = localStorage.getItem('csp-theme');
+        if (saved) {
+            document.documentElement.setAttribute('data-theme', saved);
+        }
+        updateThemeIcon();
+    }
+
+    function toggleTheme() {
+        var current = document.documentElement.getAttribute('data-theme');
+        var next = (current === 'dark') ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('csp-theme', next);
+        updateThemeIcon();
+    }
+
+    function updateThemeIcon() {
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        themeIcon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+    }
+
+    themeToggle.addEventListener('click', toggleTheme);
+
+
+    // ============================================================
+    // 3. NAVIGATION
+    // ============================================================
+
+    var navTabs = document.querySelectorAll('.nav-tab');
+    var sections = document.querySelectorAll('.section');
+    var isTransitioning = false;
+
+    function showSection(targetId) {
+        if (isTransitioning) return;
+
+        var currentSection = document.querySelector('.section.active');
+        var targetSection = document.getElementById(targetId);
+
+        if (currentSection === targetSection) return;
+
+        isTransitioning = true;
+
+        navTabs.forEach(function(tab) {
+            var isActive = tab.dataset.target === targetId;
+            tab.classList.toggle('active', isActive);
+            tab.setAttribute('aria-selected', String(isActive));
+        });
+
+        if (currentSection) {
+            currentSection.style.opacity = '0';
+            currentSection.style.transform = 'translateY(20px)';
+
+            setTimeout(function() {
+                currentSection.classList.remove('active');
+                currentSection.style.display = 'none';
+
+                targetSection.style.display = 'block';
+                void targetSection.offsetHeight;
+                targetSection.classList.add('active');
+                targetSection.style.opacity = '1';
+                targetSection.style.transform = 'translateY(0)';
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                isTransitioning = false;
+            }, 320);
+        } else {
+            targetSection.style.display = 'block';
+            void targetSection.offsetHeight;
+            targetSection.classList.add('active');
+            isTransitioning = false;
+        }
+    }
+
+    navTabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            showSection(tab.dataset.target);
+        });
+    });
+
+    document.querySelectorAll('[data-navigate]').forEach(function(card) {
+        card.addEventListener('click', function() {
+            showSection(card.dataset.navigate);
+        });
+        card.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                showSection(card.dataset.navigate);
+            }
+        });
+    });
+
+
+    // ============================================================
+    // 4. TOAST NOTIFICATIONS
+    // ============================================================
+
+    var toastContainer = document.getElementById('toast-container');
+
+    function showToast(message, type, duration) {
+        type = type || 'info';
+        duration = duration || 3500;
+
+        var toast = document.createElement('div');
+        toast.className = 'toast ' + type;
+
+        var icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', info: 'fa-circle-info' };
+        toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + message + '</span>';
+
+        toastContainer.appendChild(toast);
+
+        setTimeout(function() {
+            toast.classList.add('removing');
+            setTimeout(function() { toast.remove(); }, 350);
+        }, duration);
+    }
+
+
+    // ============================================================
+    // 5. LOADING OVERLAY
+    // ============================================================
+
+    var loadingOverlay = document.getElementById('loading-overlay');
+    var loadingText = document.getElementById('loading-text');
+
+    function showLoading(message) {
+        loadingText.textContent = message || 'Solving...';
+        loadingOverlay.classList.add('active');
+        loadingOverlay.setAttribute('aria-hidden', 'false');
+    }
+
+    function hideLoading() {
+        loadingOverlay.classList.remove('active');
+        loadingOverlay.setAttribute('aria-hidden', 'true');
+    }
+
+    function runWithLoading(fn, minTime, message) {
+        minTime = minTime || 600;
+        message = message || 'Solving...';
+        showLoading(message);
+
+        setTimeout(function() {
+            var startTime = Date.now();
+            fn();
+            var elapsed = Date.now() - startTime;
+            var remaining = Math.max(0, minTime - elapsed);
+
+            setTimeout(function() {
+                hideLoading();
+            }, remaining);
+        }, 60);
+    }
+
+
+    // ============================================================
+    // 6. SUDOKU SOLVER
+    // ============================================================
+
+    var sudokuGrid = document.getElementById('sudoku-grid');
+
+    var SAMPLE_SUDOKU = [
+        [5,3,0,0,7,0,0,0,0],
+        [6,0,0,1,9,5,0,0,0],
+        [0,9,8,0,0,0,0,6,0],
+        [8,0,0,0,6,0,0,0,3],
+        [4,0,0,8,0,3,0,0,1],
+        [7,0,0,0,2,0,0,0,6],
+        [0,6,0,0,0,0,2,8,0],
+        [0,0,0,4,1,9,0,0,5],
+        [0,0,0,0,8,0,0,7,9]
+    ];
+
+    function createSudokuGrid() {
+        sudokuGrid.innerHTML = '';
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                var input = document.createElement('input');
+                input.type = 'text';
+                input.maxLength = 1;
+                input.className = 'sudoku-cell';
+                input.dataset.row = i;
+                input.dataset.col = j;
+                input.setAttribute('aria-label', 'Row ' + (i+1) + ', Column ' + (j+1));
+
+                if (j === 3 || j === 6) input.classList.add('thick-left');
+                if (i === 3 || i === 6) input.classList.add('thick-top');
+
+                (function(cell) {
+                    cell.addEventListener('input', function(e) {
+                        e.target.value = e.target.value.replace(/[^1-9]/g, '');
+                    });
+                })(input);
+
+                (function(cell) {
+                    cell.addEventListener('keydown', function(e) {
+                        var r = parseInt(cell.dataset.row);
+                        var c = parseInt(cell.dataset.col);
+                        var nr = r, nc = c;
+
+                        if (e.key === 'ArrowRight') nc = Math.min(8, c + 1);
+                        else if (e.key === 'ArrowLeft') nc = Math.max(0, c - 1);
+                        else if (e.key === 'ArrowDown') nr = Math.min(8, r + 1);
+                        else if (e.key === 'ArrowUp') nr = Math.max(0, r - 1);
+
+                        if (nr !== r || nc !== c) {
+                            e.preventDefault();
+                            var next = sudokuGrid.querySelector('[data-row="' + nr + '"][data-col="' + nc + '"]');
+                            if (next) next.focus();
+                        }
+                    });
+                })(input);
+
+                sudokuGrid.appendChild(input);
+            }
+        }
+    }
+
+    function readSudokuBoard() {
+        var board = [];
+        for (var i = 0; i < 9; i++) {
+            board[i] = [];
+            for (var j = 0; j < 9; j++) {
+                board[i][j] = 0;
+            }
+        }
+        var cells = sudokuGrid.querySelectorAll('.sudoku-cell');
+        cells.forEach(function(cell) {
+            var r = parseInt(cell.dataset.row);
+            var c = parseInt(cell.dataset.col);
+            var val = parseInt(cell.value);
+            if (!isNaN(val) && val >= 1 && val <= 9) {
+                board[r][c] = val;
+            }
+        });
+        return board;
+    }
+
+    function isValidPlacement(board, row, col, num) {
+        for (var j = 0; j < 9; j++) {
+            if (board[row][j] === num) return false;
+        }
+        for (var i = 0; i < 9; i++) {
+            if (board[i][col] === num) return false;
+        }
+        var br = Math.floor(row / 3) * 3;
+        var bc = Math.floor(col / 3) * 3;
+        for (var i = br; i < br + 3; i++) {
+            for (var j = bc; j < bc + 3; j++) {
+                if (board[i][j] === num) return false;
+            }
+        }
+        return true;
+    }
+
+    function validateSudokuInput(board) {
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                if (board[i][j] !== 0) {
+                    var val = board[i][j];
+                    board[i][j] = 0;
+                    if (!isValidPlacement(board, i, j, val)) {
+                        board[i][j] = val;
+                        return {
+                            valid: false,
+                            message: 'Conflict at Row ' + (i+1) + ', Col ' + (j+1) + ': value ' + val + ' violates constraints.'
+                        };
+                    }
+                    board[i][j] = val;
+                }
+            }
+        }
+        return { valid: true };
+    }
+
+    function findEmpty(board) {
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                if (board[i][j] === 0) return [i, j];
+            }
+        }
+        return null;
+    }
+
+    function solveSudoku(board) {
+        var empty = findEmpty(board);
+        if (!empty) return true;
+
+        var row = empty[0];
+        var col = empty[1];
+
+        for (var num = 1; num <= 9; num++) {
+            if (isValidPlacement(board, row, col, num)) {
+                board[row][col] = num;
+                if (solveSudoku(board)) return true;
+                board[row][col] = 0;
+            }
+        }
+        return false;
+    }
+
+    function displaySudokuSolution(board) {
+        var cells = sudokuGrid.querySelectorAll('.sudoku-cell');
+        var delay = 0;
+        cells.forEach(function(cell) {
+            var r = parseInt(cell.dataset.row);
+            var c = parseInt(cell.dataset.col);
+            var val = board[r][c];
+            cell.value = val || '';
+            cell.readOnly = true;
+
+            if (!cell.classList.contains('given') && val !== 0) {
+                cell.style.animationDelay = (delay * 8) + 'ms';
+                cell.classList.add('solved');
+                delay++;
+            }
+        });
+    }
+
+    function loadSudokuSample() {
+        createSudokuGrid();
+        var cells = sudokuGrid.querySelectorAll('.sudoku-cell');
+        cells.forEach(function(cell) {
+            var r = parseInt(cell.dataset.row);
+            var c = parseInt(cell.dataset.col);
+            if (SAMPLE_SUDOKU[r][c] !== 0) {
+                cell.value = SAMPLE_SUDOKU[r][c];
+                cell.classList.add('given');
+                cell.readOnly = true;
+            }
+        });
+        showToast('Sample puzzle loaded. Click Solve to find the solution.', 'info');
+    }
+
+    function clearSudoku() {
+        createSudokuGrid();
+        showToast('Grid cleared.', 'info');
+    }
+
+    function handleSudokuSolve() {
+        var board = readSudokuBoard();
+
+        var validation = validateSudokuInput(board);
+        if (!validation.valid) {
+            showToast(validation.message, 'error');
+            return;
+        }
+
+        if (findEmpty(board) === null) {
+            showToast('The grid is already complete!', 'info');
+            return;
+        }
+
+        runWithLoading(function() {
+            var solveBoard = board.map(function(row) { return row.slice(); });
+            var success = solveSudoku(solveBoard);
+
+            if (success) {
+                displaySudokuSolution(solveBoard);
+                showToast('Sudoku solved successfully!', 'success');
+            } else {
+                showToast('No solution exists for this puzzle.', 'error');
+            }
+        }, 500, 'Solving Sudoku...');
+    }
+
+    document.getElementById('sudoku-solve-btn').addEventListener('click', handleSudokuSolve);
+    document.getElementById('sudoku-sample-btn').addEventListener('click', loadSudokuSample);
+    document.getElementById('sudoku-clear-btn').addEventListener('click', clearSudoku);
+
+
+    // ============================================================
+    // 7. N-QUEENS SOLVER
+    // ============================================================
+
+    var nInput = document.getElementById('n-input');
+    var queensBoard = document.getElementById('queens-board');
+    var queensStats = document.getElementById('queens-stats');
+
+    function isQueenSafe(board, row, col) {
+        for (var i = 0; i < row; i++) {
+            if (board[i] === col) return false;
+            if (board[i] - i === col - row) return false;
+            if (board[i] + i === col + row) return false;
+        }
+        return true;
+    }
+
+    function solveNQueens(n) {
+        var board = [];
+        for (var i = 0; i < n; i++) board[i] = -1;
+
+        var solutions = [];
+
+        function backtrack(row) {
+            if (row === n) {
+                solutions.push(board.slice());
+                return;
+            }
+            for (var col = 0; col < n; col++) {
+                if (isQueenSafe(board, row, col)) {
+                    board[row] = col;
+                    backtrack(row + 1);
+                    board[row] = -1;
+                }
+            }
+        }
+
+        backtrack(0);
+        return solutions;
+    }
+
+    function createQueensBoard(n) {
+        queensBoard.innerHTML = '';
+        queensBoard.style.gridTemplateColumns = 'repeat(' + n + ', 1fr)';
+
+        for (var i = 0; i < n; i++) {
+            for (var j = 0; j < n; j++) {
+                var cell = document.createElement('div');
+                cell.className = 'queen-cell ' + ((i + j) % 2 === 0 ? 'light' : 'dark');
+                cell.dataset.row = i;
+                cell.dataset.col = j;
+                queensBoard.appendChild(cell);
+            }
+        }
+    }
+
+    function displayQueensSolution(solution, n) {
+        createQueensBoard(n);
+
+        solution.forEach(function(col, row) {
+            setTimeout(function() {
+                var cell = queensBoard.querySelector('[data-row="' + row + '"][data-col="' + col + '"]');
+                if (cell) {
+                    cell.innerHTML = '<i class="fas fa-chess-queen"></i>';
+                    cell.classList.add('queen-placed');
+                }
+            }, row * 140);
+        });
+    }
+
+    function handleQueensSolve() {
+        var n = parseInt(nInput.value);
+
+        if (isNaN(n) || n < 1 || n > 16) {
+            showToast('Please enter a board size between 1 and 16.', 'error');
+            return;
+        }
+
+        runWithLoading(function() {
+            var solutions = solveNQueens(n);
+
+            if (solutions.length > 0) {
+                queensStats.style.display = 'flex';
+                document.getElementById('queens-solution-count').textContent = solutions.length;
+                document.getElementById('queens-board-size').textContent = n + '\u00D7' + n;
+
+                displayQueensSolution(solutions[0], n);
+
+                var msg = (solutions.length === 1)
+                    ? 'Found 1 unique solution.'
+                    : 'Found ' + solutions.length + ' solutions. Displaying the first one.';
+                showToast(msg, 'success');
+            } else {
+                queensStats.style.display = 'none';
+                createQueensBoard(n);
+                showToast('No solution exists for N = ' + n + '.', 'error');
+            }
+        }, 500, 'Solving ' + n + '-Queens...');
+    }
+
+    function clearQueens() {
+        var n = parseInt(nInput.value) || 8;
+        createQueensBoard(n);
+        queensStats.style.display = 'none';
+        showToast('Board cleared.', 'info');
+    }
+
+    document.getElementById('queens-solve-btn').addEventListener('click', handleQueensSolve);
+    document.getElementById('queens-clear-btn').addEventListener('click', clearQueens);
+
+
+    // ============================================================
+    // 8. TIMETABLE SCHEDULER
+    // ============================================================
+
+    var SUBJECT_COLORS = [
+        '#00E5FF', '#A855F7', '#F43F5E', '#10B981',
+        '#FB923C', '#6366F1', '#EAB308', '#EC4899',
+        '#14B8A6', '#8B5CF6', '#F97316', '#06B6D4'
+    ];
+
+    var DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+    var DEFAULT_SUBJECTS = [
+        { name: 'Mathematics',    teacher: 'Mr. Smith' },
+        { name: 'Advanced Math',  teacher: 'Mr. Smith' },
+        { name: 'Physics',        teacher: 'Ms. Johnson' },
+        { name: 'Chemistry',      teacher: 'Dr. Brown' },
+        { name: 'Lab Chemistry',  teacher: 'Dr. Brown' },
+        { name: 'English',        teacher: 'Ms. Davis' },
+        { name: 'Biology',        teacher: 'Mr. Wilson' },
+        { name: 'Computer Sci',   teacher: 'Ms. Taylor' }
+    ];
+
+    var subjects = [];
+
+    function renderSubjectList() {
+        var list = document.getElementById('subject-list');
+        list.innerHTML = '';
+
+        subjects.forEach(function(sub, index) {
+            var item = document.createElement('div');
+            item.className = 'subject-item';
+            item.innerHTML =
+                '<span class="subject-color-dot" style="background:' + SUBJECT_COLORS[index % SUBJECT_COLORS.length] + ';box-shadow:0 0 8px ' + SUBJECT_COLORS[index % SUBJECT_COLORS.length] + '44"></span>' +
+                '<div class="subject-item-info">' +
+                    '<div class="subject-item-name">' + escapeHtml(sub.name) + '</div>' +
+                    '<div class="subject-item-teacher">' + escapeHtml(sub.teacher) + '</div>' +
+                '</div>' +
+                '<button class="btn-icon" data-remove-index="' + index + '" aria-label="Remove ' + escapeHtml(sub.name) + '" style="width:28px;height:28px;font-size:0.7rem;flex-shrink:0">' +
+                    '<i class="fas fa-times"></i>' +
+                '</button>';
+            list.appendChild(item);
+        });
+
+        list.querySelectorAll('[data-remove-index]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var idx = parseInt(btn.dataset.removeIndex);
+                var removed = subjects.splice(idx, 1)[0];
+                renderSubjectList();
+                showToast('Removed "' + removed.name + '".', 'info');
+            });
+        });
+    }
+
+    function addSubject() {
+        var nameInput = document.getElementById('new-subject');
+        var teacherInput = document.getElementById('new-teacher');
+        var name = nameInput.value.trim();
+        var teacher = teacherInput.value.trim();
+
+        if (!name || !teacher) {
+            showToast('Please enter both subject name and teacher.', 'error');
+            return;
+        }
+
+        subjects.push({ name: name, teacher: teacher });
+        nameInput.value = '';
+        teacherInput.value = '';
+        nameInput.focus();
+        renderSubjectList();
+        showToast('Added "' + name + '" taught by ' + teacher + '.', 'success');
+    }
+
+    function solveTimetable(subjectsList, periodsPerDay) {
+        var n = subjectsList.length;
+
+        var slots = [];
+        for (var d = 0; d < DAYS.length; d++) {
+            for (var p = 0; p < periodsPerDay; p++) {
+                slots.push({ dayIndex: d, dayName: DAYS[d], period: p });
+            }
+        }
+
+        if (n > slots.length) return null;
+
+        var assignment = [];
+        for (var i = 0; i < n; i++) assignment[i] = -1;
+        var usedSlots = {};
+
+        function hasConsecutiveConflict(idx, slotIdx) {
+            var teacher = subjectsList[idx].teacher;
+            var day = slots[slotIdx].dayIndex;
+            var period = slots[slotIdx].period;
+
+            for (var i = 0; i < idx; i++) {
+                if (subjectsList[i].teacher === teacher && assignment[i] !== -1) {
+                    var other = slots[assignment[i]];
+                    if (other.dayIndex === day && Math.abs(other.period - period) === 1) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function backtrack(idx) {
+            if (idx === n) return true;
+
+            for (var s = 0; s < slots.length; s++) {
+                if (usedSlots[s]) continue;
+                if (hasConsecutiveConflict(idx, s)) continue;
+
+                usedSlots[s] = true;
+                assignment[idx] = s;
+
+                if (backtrack(idx + 1)) return true;
+
+                delete usedSlots[s];
+                assignment[idx] = -1;
+            }
+            return false;
+        }
+
+        if (backtrack(0)) {
+            var result = [];
+            for (var i = 0; i < n; i++) {
+                var slot = slots[assignment[i]];
+                result.push({
+                    subject: subjectsList[i].name,
+                    teacher: subjectsList[i].teacher,
+                    color: SUBJECT_COLORS[i % SUBJECT_COLORS.length],
+                    dayIndex: slot.dayIndex,
+                    dayName: slot.dayName,
+                    period: slot.period
+                });
+            }
+            return result;
+        }
+        return null;
+    }
+
+    function displayTimetable(assignments, periodsPerDay) {
+        var output = document.getElementById('timetable-output');
+        var legend = document.getElementById('timetable-legend');
+
+        var timetable = {};
+        for (var d = 0; d < DAYS.length; d++) {
+            timetable[d] = {};
+            for (var p = 0; p < periodsPerDay; p++) {
+                timetable[d][p] = null;
+            }
+        }
+        assignments.forEach(function(a) {
+            timetable[a.dayIndex][a.period] = a;
+        });
+
+        var html = '<table class="timetable-table"><thead><tr><th></th>';
+        DAYS.forEach(function(day) { html += '<th>' + day + '</th>'; });
+        html += '</tr></thead><tbody>';
+
+        for (var p = 0; p < periodsPerDay; p++) {
+            html += '<tr><th>Period ' + (p + 1) + '</th>';
+            for (var d = 0; d < DAYS.length; d++) {
+                var entry = timetable[d][p];
+                if (entry) {
+                    html += '<td class="filled-cell" style="background:' + entry.color + '18;border:1px solid ' + entry.color + '30">' +
+                        '<div class="filled-cell-subject" style="color:' + entry.color + '">' + escapeHtml(entry.subject) + '</div>' +
+                        '<div class="filled-cell-teacher">' + escapeHtml(entry.teacher) + '</div>' +
+                    '</td>';
+                } else {
+                    html += '<td class="empty-cell">&mdash;</td>';
+                }
+            }
+            html += '</tr>';
+        }
+        html += '</tbody></table>';
+        output.innerHTML = html;
+
+        legend.style.display = 'flex';
+        var legendHtml = '';
+        assignments.forEach(function(a) {
+            legendHtml += '<div class="legend-item">' +
+                '<span class="legend-dot" style="background:' + a.color + ';box-shadow:0 0 6px ' + a.color + '66"></span>' +
+                escapeHtml(a.subject) +
+            '</div>';
+        });
+        legend.innerHTML = legendHtml;
+    }
+
+    function handleTimetableGenerate() {
+        if (subjects.length === 0) {
+            showToast('Please add at least one subject.', 'error');
+            return;
+        }
+
+        var periods = parseInt(document.getElementById('periods-input').value);
+        if (isNaN(periods) || periods < 1 || periods > 8) {
+            showToast('Periods per day must be between 1 and 8.', 'error');
+            return;
+        }
+
+        var totalSlots = DAYS.length * periods;
+        if (subjects.length > totalSlots) {
+            showToast('Too many subjects (' + subjects.length + ') for ' + totalSlots + ' available slots. Reduce subjects or increase periods.', 'error');
+            return;
+        }
+
+        runWithLoading(function() {
+            var result = solveTimetable(subjects, periods);
+
+            if (result) {
+                displayTimetable(result, periods);
+                showToast('Timetable generated: ' + subjects.length + ' subjects scheduled!', 'success');
+            } else {
+                document.getElementById('timetable-output').innerHTML =
+                    '<p style="text-align:center;padding:48px 0;color:var(--danger)">' +
+                        '<i class="fas fa-triangle-exclamation" style="font-size:2rem;display:block;margin-bottom:14px"></i>' +
+                        'No valid timetable found. Try reducing subjects, adding more periods, or removing overlapping teacher assignments.' +
+                    '</p>';
+                document.getElementById('timetable-legend').style.display = 'none';
+                showToast('No valid timetable exists with current constraints.', 'error');
+            }
+        }, 600, 'Generating timetable...');
+    }
+
+    function resetTimetable() {
+        subjects = DEFAULT_SUBJECTS.map(function(s) { return { name: s.name, teacher: s.teacher }; });
+        document.getElementById('periods-input').value = 3;
+        document.getElementById('new-subject').value = '';
+        document.getElementById('new-teacher').value = '';
+        renderSubjectList();
+
+        document.getElementById('timetable-output').innerHTML =
+            '<p class="text-muted text-center" style="padding:48px 0">' +
+                '<i class="fas fa-calendar-xmark" style="font-size:2.2rem;display:block;margin-bottom:14px;opacity:0.2"></i>' +
+                'Configure your subjects and click Generate to create a timetable.' +
+            '</p>';
+        document.getElementById('timetable-legend').style.display = 'none';
+        showToast('Timetable reset to defaults.', 'info');
+    }
+
+    document.getElementById('add-subject-btn').addEventListener('click', addSubject);
+    document.getElementById('timetable-generate-btn').addEventListener('click', handleTimetableGenerate);
+    document.getElementById('timetable-clear-btn').addEventListener('click', resetTimetable);
+
+    document.getElementById('new-subject').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') addSubject();
+    });
+    document.getElementById('new-teacher').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') addSubject();
+    });
+
+
+    // ============================================================
+    // 9. INITIALIZATION
+    // ============================================================
+
+    (function init() {
+        loadTheme();
+        createSudokuGrid();
+        createQueensBoard(8);
+        subjects = DEFAULT_SUBJECTS.map(function(s) {
+            return { name: s.name, teacher: s.teacher };
+        });
+        renderSubjectList();
+    })();
+
+    </script>
+</body>
+</html>
