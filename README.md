@@ -28,4 +28,4 @@ An interactive web application to explore Constraint Satisfaction Problems (CSP)
 - AI-based heuristics (MRV, Forward Checking)
 
 ## 👨‍💻 Author
-Zephyr
+Saurabh Raj Shekhar
