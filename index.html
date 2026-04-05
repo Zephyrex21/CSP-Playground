@@ -783,6 +783,240 @@
         @media(prefers-reduced-motion:reduce){
             *,*::before,*::after { animation-duration:0.01ms!important; transition-duration:0.01ms!important; }
         }
+
+        /* ===== ALGORITHM PANEL ===== */
+        .algo-panel {
+            background: var(--card);
+            backdrop-filter: blur(24px) saturate(1.3);
+            -webkit-backdrop-filter: blur(24px) saturate(1.3);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 22px 26px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .algo-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--gradient-main);
+            border-radius: 2px 2px 0 0;
+        }
+        .algo-panel-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .algo-panel-title {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--fg);
+            letter-spacing: 0.01em;
+        }
+        .algo-badge {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 100px;
+            background: var(--accent-glow);
+            color: var(--accent);
+            border: 1px solid rgba(var(--accent-rgb), 0.2);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .algo-stats-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .algo-stat {
+            flex: 1;
+            min-width: 80px;
+            padding: 10px 14px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+        .algo-stat-val {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .algo-stat-label {
+            font-size: 0.68rem;
+            color: var(--fg-muted);
+            margin-top: 2px;
+            letter-spacing: 0.03em;
+        }
+        .algo-log {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: var(--fg-muted);
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: var(--radius-xs);
+            padding: 10px 14px;
+            max-height: 72px;
+            overflow-y: auto;
+            line-height: 1.6;
+            scrollbar-width: thin;
+            scrollbar-color: var(--card-border) transparent;
+        }
+        .algo-log .log-try  { color: var(--accent); }
+        .algo-log .log-back { color: var(--danger); }
+        .algo-log .log-ok   { color: var(--success); }
+
+        /* ===== STEP-BY-STEP CONTROLS ===== */
+        .step-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: var(--radius-sm);
+        }
+        .step-controls label {
+            font-size: 0.78rem;
+            color: var(--fg-muted);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .speed-slider {
+            flex: 1;
+            min-width: 80px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--card-border);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.4);
+        }
+        .speed-slider::-moz-range-thumb {
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            border: none;
+        }
+        .step-mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.78rem;
+            color: var(--fg-muted);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 34px; height: 18px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-track {
+            position: absolute;
+            inset: 0;
+            background: var(--card-border);
+            border-radius: 9px;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+        .toggle-track::after {
+            content: '';
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: white;
+            transition: transform 0.3s;
+        }
+        .toggle-switch input:checked + .toggle-track { background: var(--accent); }
+        .toggle-switch input:checked + .toggle-track::after { transform: translateX(16px); }
+
+        /* ===== SUDOKU STEP HIGHLIGHT ===== */
+        .sudoku-cell.step-try {
+            background: rgba(var(--accent-rgb), 0.18) !important;
+            box-shadow: inset 0 0 0 2px rgba(var(--accent-rgb), 0.7), 0 0 12px rgba(var(--accent-rgb), 0.2) !important;
+            color: var(--accent) !important;
+            z-index: 2; position: relative;
+            transition: background 0.15s, box-shadow 0.15s;
+        }
+        .sudoku-cell.step-back {
+            background: rgba(244, 63, 94, 0.15) !important;
+            box-shadow: inset 0 0 0 2px rgba(244, 63, 94, 0.6) !important;
+            color: var(--danger) !important;
+            z-index: 2; position: relative;
+        }
+        .sudoku-cell.step-ok {
+            background: rgba(16, 185, 129, 0.12) !important;
+            box-shadow: inset 0 0 0 2px rgba(16, 185, 129, 0.5) !important;
+            color: var(--success) !important;
+            z-index: 2; position: relative;
+        }
+
+        /* ===== QUEENS STEP HIGHLIGHT ===== */
+        .queen-cell.step-try {
+            background: rgba(var(--accent-rgb), 0.2) !important;
+            outline: 2px solid rgba(var(--accent-rgb), 0.7);
+            outline-offset: -2px;
+        }
+        .queen-cell.step-attack {
+            background: rgba(244, 63, 94, 0.18) !important;
+        }
+
+        /* ===== ENHANCED BOARD REVEAL ANIMATION ===== */
+        @keyframes cellRevealBounce {
+            0%   { opacity: 0; transform: scale(0.3) rotate(-10deg); }
+            55%  { opacity: 1; transform: scale(1.12) rotate(3deg); }
+            75%  { transform: scale(0.95) rotate(-1deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        .sudoku-cell.solved {
+            background: var(--sudoku-solved);
+            color: var(--accent-secondary);
+            animation: cellRevealBounce 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+        @keyframes queenLand {
+            0%   { opacity: 0; transform: scale(0) translateY(-16px) rotate(-20deg); }
+            60%  { opacity: 1; transform: scale(1.2) translateY(2px) rotate(4deg); }
+            80%  { transform: scale(0.93) translateY(0) rotate(-2deg); }
+            100% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
+        }
+        .queen-cell.queen-placed {
+            color: var(--queen-color);
+            filter: drop-shadow(0 0 8px rgba(var(--accent-rgb), 0.5));
+            animation: queenLand 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* ===== TIMETABLE CELL REVEAL ===== */
+        @keyframes ttCellIn {
+            from { opacity: 0; transform: scale(0.8) translateY(6px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .timetable-table td.filled-cell {
+            animation: ttCellIn 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
     </style>
 </head>
 <body>
@@ -878,14 +1112,26 @@
 
         <section id="sudoku" class="section" role="tabpanel">
             <h2 class="section-title">Sudoku Solver</h2>
-            <p class="section-desc mb-16">Enter a puzzle or load a sample. The backtracking algorithm will find the unique solution respecting all row, column, and block constraints.</p>
+            <p class="section-desc mb-16">Enter a puzzle or load a random sample. Toggle step-by-step mode to watch the backtracking algorithm think in real time.</p>
             <div class="sudoku-layout">
                 <div class="sudoku-grid-wrapper">
                     <div class="sudoku-grid" id="sudoku-grid" role="grid" aria-label="Sudoku puzzle grid"></div>
                     <div class="sudoku-controls">
                         <button class="btn-primary" id="sudoku-solve-btn"><i class="fas fa-wand-magic-sparkles"></i> Solve</button>
-                        <button class="btn-secondary" id="sudoku-sample-btn"><i class="fas fa-dice"></i> Load Sample</button>
+                        <button class="btn-secondary" id="sudoku-sample-btn"><i class="fas fa-dice"></i> Random Puzzle</button>
                         <button class="btn-secondary" id="sudoku-clear-btn"><i class="fas fa-eraser"></i> Clear</button>
+                    </div>
+                    <div class="step-controls">
+                        <label class="step-mode-toggle">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="sudoku-step-toggle">
+                                <span class="toggle-track"></span>
+                            </span>
+                            Step-by-step
+                        </label>
+                        <label style="font-size:0.78rem;color:var(--fg-muted);font-weight:600">Speed</label>
+                        <input type="range" class="speed-slider" id="sudoku-speed" min="1" max="5" value="3" style="min-width:60px;max-width:100px">
+                        <span id="sudoku-speed-label" style="font-size:0.75rem;color:var(--accent);font-weight:700;min-width:28px">Med</span>
                     </div>
                 </div>
                 <div class="sudoku-info glass-card">
@@ -897,7 +1143,29 @@
                         <li><span class="step-num">4</span><span><strong style="color:var(--fg)">Algorithm:</strong> Backtracking — try a value, recurse, undo if stuck</span></li>
                     </ol>
                     <div class="constraints-note mt-16">
-                        <strong>Tip:</strong> Use only digits 1-9. Leave empty cells blank. Invalid puzzles (duplicate givens) will be detected automatically.
+                        <strong>Tip:</strong> Enable step-by-step to see each try <span style="color:var(--accent)">&#9679;</span> and backtrack <span style="color:var(--danger)">&#9679;</span> live.
+                    </div>
+                    <div class="algo-panel" id="sudoku-algo-panel" style="display:none">
+                        <div class="algo-panel-header">
+                            <i class="fas fa-microchip" style="color:var(--accent);font-size:0.85rem"></i>
+                            <span class="algo-panel-title">Algorithm Monitor</span>
+                            <span class="algo-badge">Live</span>
+                        </div>
+                        <div class="algo-stats-row">
+                            <div class="algo-stat">
+                                <div class="algo-stat-val" id="s-tries">0</div>
+                                <div class="algo-stat-label">Tries</div>
+                            </div>
+                            <div class="algo-stat">
+                                <div class="algo-stat-val" id="s-backs">0</div>
+                                <div class="algo-stat-label">Backtracks</div>
+                            </div>
+                            <div class="algo-stat">
+                                <div class="algo-stat-val" id="s-cells">0</div>
+                                <div class="algo-stat-label">Cells Done</div>
+                            </div>
+                        </div>
+                        <div class="algo-log" id="sudoku-log">Waiting to start...</div>
                     </div>
                 </div>
             </div>
@@ -905,13 +1173,26 @@
 
         <section id="queens" class="section" role="tabpanel">
             <h2 class="section-title text-center">N-Queens Solver</h2>
-            <p class="section-desc text-center" style="margin:0 auto 28px">Place N queens on an NxN chessboard so that no two queens threaten each other. The solver finds all solutions using backtracking.</p>
+            <p class="section-desc text-center" style="margin:0 auto 28px">Place N queens on an NxN chessboard so that no two queens threaten each other. Enable step-by-step to watch the algorithm place and backtrack.</p>
             <div class="queens-layout">
                 <div class="queens-input-area">
                     <label for="n-input">Board Size (N):</label>
                     <input type="number" id="n-input" class="input-field" value="8" min="1" max="16" aria-label="Number of queens">
                     <button class="btn-primary" id="queens-solve-btn"><i class="fas fa-chess-queen"></i> Solve</button>
                     <button class="btn-secondary" id="queens-clear-btn"><i class="fas fa-eraser"></i> Clear</button>
+                </div>
+                <!-- Step controls for queens -->
+                <div class="step-controls" style="max-width:520px;width:100%">
+                    <label class="step-mode-toggle">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="queens-step-toggle">
+                            <span class="toggle-track"></span>
+                        </span>
+                        Step-by-step
+                    </label>
+                    <label style="font-size:0.78rem;color:var(--fg-muted);font-weight:600">Speed</label>
+                    <input type="range" class="speed-slider" id="queens-speed" min="1" max="5" value="3" style="min-width:60px;max-width:100px">
+                    <span id="queens-speed-label" style="font-size:0.75rem;color:var(--accent);font-weight:700;min-width:28px">Med</span>
                 </div>
                 <div class="queens-stats" id="queens-stats" style="display:none">
                     <div class="glass-card stat-item">
@@ -922,10 +1203,37 @@
                         <div class="stat-value" id="queens-board-size">0</div>
                         <div class="stat-label">Board Size</div>
                     </div>
+                    <div class="glass-card stat-item">
+                        <div class="stat-value" id="queens-backtracks">0</div>
+                        <div class="stat-label">Backtracks</div>
+                    </div>
                 </div>
                 <div class="queens-board" id="queens-board" aria-label="N-Queens chessboard"></div>
                 <div class="constraints-note" style="max-width:520px;text-align:center">
                     <strong>Constraints:</strong> No two queens share the same column, row, or diagonal. Each solution places exactly N queens with zero conflicts.
+                </div>
+                <!-- Queens algo panel -->
+                <div class="algo-panel" id="queens-algo-panel" style="display:none;max-width:520px;width:100%">
+                    <div class="algo-panel-header">
+                        <i class="fas fa-microchip" style="color:var(--accent);font-size:0.85rem"></i>
+                        <span class="algo-panel-title">Algorithm Monitor</span>
+                        <span class="algo-badge">Live</span>
+                    </div>
+                    <div class="algo-stats-row">
+                        <div class="algo-stat">
+                            <div class="algo-stat-val" id="q-placed">0</div>
+                            <div class="algo-stat-label">Queens Placed</div>
+                        </div>
+                        <div class="algo-stat">
+                            <div class="algo-stat-val" id="q-backs">0</div>
+                            <div class="algo-stat-label">Backtracks</div>
+                        </div>
+                        <div class="algo-stat">
+                            <div class="algo-stat-val" id="q-tries">0</div>
+                            <div class="algo-stat-label">Attempts</div>
+                        </div>
+                    </div>
+                    <div class="algo-log" id="queens-log">Waiting to start...</div>
                 </div>
             </div>
         </section>
@@ -1003,233 +1311,192 @@
 
     <script>
     /* ================================================================
-       CSP SOLVER HUB — Complete Application JavaScript
+       CSP SOLVER HUB — All variables declared first, then functions
        ================================================================ */
 
     // ============================================================
-    // 1. UTILITY HELPERS
+    // 1. UTILITY
     // ============================================================
-
     function escapeHtml(text) {
-        var div = document.createElement('div');
-        div.appendChild(document.createTextNode(text));
-        return div.innerHTML;
+        var d = document.createElement('div');
+        d.appendChild(document.createTextNode(text));
+        return d.innerHTML;
     }
 
-
     // ============================================================
-    // 2. THEME MANAGEMENT
+    // 2. THEME
     // ============================================================
-
     var themeToggle = document.getElementById('theme-toggle');
-    var themeIcon = themeToggle.querySelector('i');
+    var themeIcon   = themeToggle.querySelector('i');
 
+    function updateThemeIcon() {
+        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        themeIcon.className = dark ? 'fas fa-moon' : 'fas fa-sun';
+    }
     function loadTheme() {
         var saved = localStorage.getItem('csp-theme');
-        if (saved) {
-            document.documentElement.setAttribute('data-theme', saved);
-        }
+        if (saved) document.documentElement.setAttribute('data-theme', saved);
         updateThemeIcon();
     }
-
     function toggleTheme() {
-        var current = document.documentElement.getAttribute('data-theme');
-        var next = (current === 'dark') ? 'light' : 'dark';
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
         localStorage.setItem('csp-theme', next);
         updateThemeIcon();
     }
-
-    function updateThemeIcon() {
-        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        themeIcon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
-    }
-
     themeToggle.addEventListener('click', toggleTheme);
-
 
     // ============================================================
     // 3. NAVIGATION
     // ============================================================
-
-    var navTabs = document.querySelectorAll('.nav-tab');
-    var sections = document.querySelectorAll('.section');
+    var navTabs       = document.querySelectorAll('.nav-tab');
+    var sections      = document.querySelectorAll('.section');
     var isTransitioning = false;
 
     function showSection(targetId) {
         if (isTransitioning) return;
-
-        var currentSection = document.querySelector('.section.active');
-        var targetSection = document.getElementById(targetId);
-
-        if (currentSection === targetSection) return;
-
+        var current = document.querySelector('.section.active');
+        var target  = document.getElementById(targetId);
+        if (!target || current === target) return;
         isTransitioning = true;
 
         navTabs.forEach(function(tab) {
-            var isActive = tab.dataset.target === targetId;
-            tab.classList.toggle('active', isActive);
-            tab.setAttribute('aria-selected', String(isActive));
+            var active = tab.dataset.target === targetId;
+            tab.classList.toggle('active', active);
+            tab.setAttribute('aria-selected', String(active));
         });
 
-        if (currentSection) {
-            currentSection.style.opacity = '0';
-            currentSection.style.transform = 'translateY(20px)';
-
+        if (current) {
+            current.style.opacity = '0';
+            current.style.transform = 'translateY(20px)';
             setTimeout(function() {
-                currentSection.classList.remove('active');
-                currentSection.style.display = 'none';
-
-                targetSection.style.display = 'block';
-                void targetSection.offsetHeight;
-                targetSection.classList.add('active');
-                targetSection.style.opacity = '1';
-                targetSection.style.transform = 'translateY(0)';
-
+                current.classList.remove('active');
+                current.style.display = 'none';
+                target.style.display = 'block';
+                void target.offsetHeight;
+                target.classList.add('active');
+                target.style.opacity = '1';
+                target.style.transform = 'translateY(0)';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 isTransitioning = false;
-            }, 320);
+            }, 300);
         } else {
-            targetSection.style.display = 'block';
-            void targetSection.offsetHeight;
-            targetSection.classList.add('active');
+            target.style.display = 'block';
+            void target.offsetHeight;
+            target.classList.add('active');
             isTransitioning = false;
         }
     }
 
     navTabs.forEach(function(tab) {
-        tab.addEventListener('click', function() {
-            showSection(tab.dataset.target);
-        });
+        tab.addEventListener('click', function() { showSection(tab.dataset.target); });
     });
-
     document.querySelectorAll('[data-navigate]').forEach(function(card) {
-        card.addEventListener('click', function() {
-            showSection(card.dataset.navigate);
-        });
+        card.addEventListener('click', function() { showSection(card.dataset.navigate); });
         card.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                showSection(card.dataset.navigate);
-            }
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showSection(card.dataset.navigate); }
         });
     });
 
-
     // ============================================================
-    // 4. TOAST NOTIFICATIONS
+    // 4. TOAST
     // ============================================================
-
     var toastContainer = document.getElementById('toast-container');
 
     function showToast(message, type, duration) {
-        type = type || 'info';
+        type     = type     || 'info';
         duration = duration || 3500;
-
         var toast = document.createElement('div');
         toast.className = 'toast ' + type;
-
         var icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', info: 'fa-circle-info' };
         toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + message + '</span>';
-
         toastContainer.appendChild(toast);
-
         setTimeout(function() {
             toast.classList.add('removing');
-            setTimeout(function() { toast.remove(); }, 350);
+            setTimeout(function() { if (toast.parentNode) toast.remove(); }, 350);
         }, duration);
     }
-
 
     // ============================================================
     // 5. LOADING OVERLAY
     // ============================================================
-
     var loadingOverlay = document.getElementById('loading-overlay');
-    var loadingText = document.getElementById('loading-text');
+    var loadingText    = document.getElementById('loading-text');
 
-    function showLoading(message) {
-        loadingText.textContent = message || 'Solving...';
+    function showLoading(msg) {
+        loadingText.textContent = msg || 'Solving...';
         loadingOverlay.classList.add('active');
         loadingOverlay.setAttribute('aria-hidden', 'false');
     }
-
     function hideLoading() {
         loadingOverlay.classList.remove('active');
         loadingOverlay.setAttribute('aria-hidden', 'true');
     }
-
-    function runWithLoading(fn, minTime, message) {
+    function runWithLoading(fn, minTime, msg) {
         minTime = minTime || 600;
-        message = message || 'Solving...';
-        showLoading(message);
-
+        showLoading(msg || 'Solving...');
         setTimeout(function() {
-            var startTime = Date.now();
-            fn();
-            var elapsed = Date.now() - startTime;
-            var remaining = Math.max(0, minTime - elapsed);
-
-            setTimeout(function() {
-                hideLoading();
-            }, remaining);
+            try { fn(); } catch(e) { hideLoading(); throw e; }
+            var remaining = Math.max(0, minTime - 60);
+            setTimeout(hideLoading, remaining);
         }, 60);
     }
-
 
     // ============================================================
     // 6. SUDOKU SOLVER
     // ============================================================
 
+    // --- State (all declared before any function uses them) ---
+    var sudokuSolving     = false;
+    var sudokuReplayTimer = null;
+    var SUDOKU_SPEEDS     = { '1': 800, '2': 400, '3': 150, '4': 40, '5': 8 };
+    var SPEED_LABELS      = { '1': 'Slow', '2': 'Med', '3': 'Fast', '4': 'Turbo', '5': 'Max' };
+
     var sudokuGrid = document.getElementById('sudoku-grid');
 
-    var SAMPLE_SUDOKU = [
-        [5,3,0,0,7,0,0,0,0],
-        [6,0,0,1,9,5,0,0,0],
-        [0,9,8,0,0,0,0,6,0],
-        [8,0,0,0,6,0,0,0,3],
-        [4,0,0,8,0,3,0,0,1],
-        [7,0,0,0,2,0,0,0,6],
-        [0,6,0,0,0,0,2,8,0],
-        [0,0,0,4,1,9,0,0,5],
-        [0,0,0,0,8,0,0,7,9]
+    var SUDOKU_PUZZLES = [
+        [[5,3,0,0,7,0,0,0,0],[6,0,0,1,9,5,0,0,0],[0,9,8,0,0,0,0,6,0],[8,0,0,0,6,0,0,0,3],[4,0,0,8,0,3,0,0,1],[7,0,0,0,2,0,0,0,6],[0,6,0,0,0,0,2,8,0],[0,0,0,4,1,9,0,0,5],[0,0,0,0,8,0,0,7,9]],
+        [[0,0,0,2,6,0,7,0,1],[6,8,0,0,7,0,0,9,0],[1,9,0,0,0,4,5,0,0],[8,2,0,1,0,0,0,4,0],[0,0,4,6,0,2,9,0,0],[0,5,0,0,0,3,0,2,8],[0,0,9,3,0,0,0,7,4],[0,4,0,0,5,0,0,3,6],[7,0,3,0,1,8,0,0,0]],
+        [[1,0,0,4,8,9,0,0,6],[7,3,0,0,0,0,0,4,0],[0,0,0,0,0,1,2,9,5],[0,0,7,1,2,0,6,0,0],[5,0,0,7,0,3,0,0,8],[0,0,6,0,9,5,7,0,0],[9,1,4,6,0,0,0,0,0],[0,2,0,0,0,0,0,3,7],[8,0,0,5,1,2,0,0,4]],
+        [[0,2,0,6,0,8,0,0,0],[5,8,0,0,0,9,7,0,0],[0,0,0,0,4,0,0,0,0],[3,7,0,0,0,0,5,0,0],[6,0,0,0,0,0,0,0,4],[0,0,8,0,0,0,0,1,3],[0,0,0,0,2,0,0,0,0],[0,0,9,8,0,0,0,3,6],[0,0,0,3,0,6,0,9,0]],
+        [[0,0,5,3,0,0,0,0,0],[8,0,0,0,0,0,0,2,0],[0,7,0,0,1,0,5,0,0],[4,0,0,0,0,5,3,0,0],[0,1,0,0,7,0,0,0,6],[0,0,3,2,0,0,0,8,0],[0,6,0,5,0,0,0,0,9],[0,0,4,0,0,0,0,3,0],[0,0,0,0,0,9,7,0,0]],
+        [[0,0,0,0,0,0,6,8,0],[0,0,0,0,7,3,0,0,9],[3,0,9,0,0,0,0,4,5],[4,9,0,0,0,0,0,0,0],[8,0,3,0,5,0,9,0,2],[0,0,0,0,0,0,0,3,6],[9,6,0,0,0,0,3,0,8],[7,0,0,6,8,0,0,0,0],[0,2,8,0,0,0,0,0,0]],
+        [[0,0,0,0,0,0,0,0,1],[0,0,0,0,3,5,0,8,0],[0,0,2,6,0,0,0,0,0],[0,5,0,0,0,0,0,0,0],[0,0,0,8,0,4,0,0,0],[0,0,0,0,0,0,0,3,0],[0,0,0,0,0,0,0,0,7],[0,6,0,0,8,0,0,9,0],[0,0,0,0,5,0,0,0,0]],
+        [[0,0,0,0,0,0,2,0,0],[0,0,0,0,3,5,0,0,0],[0,0,1,0,0,0,0,3,0],[0,0,0,0,0,8,0,0,7],[0,0,0,0,2,0,0,0,0],[3,0,0,4,0,0,0,0,0],[0,4,0,0,0,0,6,0,0],[0,0,0,7,1,0,0,0,0],[0,0,5,0,0,0,0,2,0]]
     ];
+
+    function getRandomPuzzle() {
+        return SUDOKU_PUZZLES[Math.floor(Math.random() * SUDOKU_PUZZLES.length)];
+    }
 
     function createSudokuGrid() {
         sudokuGrid.innerHTML = '';
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
                 var input = document.createElement('input');
-                input.type = 'text';
+                input.type      = 'text';
                 input.maxLength = 1;
                 input.className = 'sudoku-cell';
                 input.dataset.row = i;
                 input.dataset.col = j;
                 input.setAttribute('aria-label', 'Row ' + (i+1) + ', Column ' + (j+1));
-
                 if (j === 3 || j === 6) input.classList.add('thick-left');
                 if (i === 3 || i === 6) input.classList.add('thick-top');
 
                 (function(cell) {
-                    cell.addEventListener('input', function(e) {
-                        e.target.value = e.target.value.replace(/[^1-9]/g, '');
+                    cell.addEventListener('input', function() {
+                        cell.value = cell.value.replace(/[^1-9]/g, '');
                     });
-                })(input);
-
-                (function(cell) {
                     cell.addEventListener('keydown', function(e) {
-                        var r = parseInt(cell.dataset.row);
-                        var c = parseInt(cell.dataset.col);
+                        var r = parseInt(cell.dataset.row), c = parseInt(cell.dataset.col);
                         var nr = r, nc = c;
-
-                        if (e.key === 'ArrowRight') nc = Math.min(8, c + 1);
-                        else if (e.key === 'ArrowLeft') nc = Math.max(0, c - 1);
-                        else if (e.key === 'ArrowDown') nr = Math.min(8, r + 1);
-                        else if (e.key === 'ArrowUp') nr = Math.max(0, r - 1);
-
+                        if (e.key === 'ArrowRight') nc = Math.min(8, c+1);
+                        else if (e.key === 'ArrowLeft')  nc = Math.max(0, c-1);
+                        else if (e.key === 'ArrowDown')  nr = Math.min(8, r+1);
+                        else if (e.key === 'ArrowUp')    nr = Math.max(0, r-1);
                         if (nr !== r || nc !== c) {
                             e.preventDefault();
-                            var next = sudokuGrid.querySelector('[data-row="' + nr + '"][data-col="' + nc + '"]');
+                            var next = sudokuGrid.querySelector('[data-row="'+nr+'"][data-col="'+nc+'"]');
                             if (next) next.focus();
                         }
                     });
@@ -1242,38 +1509,20 @@
 
     function readSudokuBoard() {
         var board = [];
-        for (var i = 0; i < 9; i++) {
-            board[i] = [];
-            for (var j = 0; j < 9; j++) {
-                board[i][j] = 0;
-            }
-        }
-        var cells = sudokuGrid.querySelectorAll('.sudoku-cell');
-        cells.forEach(function(cell) {
-            var r = parseInt(cell.dataset.row);
-            var c = parseInt(cell.dataset.col);
-            var val = parseInt(cell.value);
-            if (!isNaN(val) && val >= 1 && val <= 9) {
-                board[r][c] = val;
-            }
+        for (var i = 0; i < 9; i++) { board[i] = []; for (var j = 0; j < 9; j++) board[i][j] = 0; }
+        sudokuGrid.querySelectorAll('.sudoku-cell').forEach(function(cell) {
+            var r = parseInt(cell.dataset.row), c = parseInt(cell.dataset.col);
+            var v = parseInt(cell.value);
+            if (!isNaN(v) && v >= 1 && v <= 9) board[r][c] = v;
         });
         return board;
     }
 
     function isValidPlacement(board, row, col, num) {
-        for (var j = 0; j < 9; j++) {
-            if (board[row][j] === num) return false;
-        }
-        for (var i = 0; i < 9; i++) {
-            if (board[i][col] === num) return false;
-        }
-        var br = Math.floor(row / 3) * 3;
-        var bc = Math.floor(col / 3) * 3;
-        for (var i = br; i < br + 3; i++) {
-            for (var j = bc; j < bc + 3; j++) {
-                if (board[i][j] === num) return false;
-            }
-        }
+        for (var j = 0; j < 9; j++) if (board[row][j] === num) return false;
+        for (var i = 0; i < 9; i++) if (board[i][col]  === num) return false;
+        var br = Math.floor(row/3)*3, bc = Math.floor(col/3)*3;
+        for (var i = br; i < br+3; i++) for (var j = bc; j < bc+3; j++) if (board[i][j] === num) return false;
         return true;
     }
 
@@ -1281,16 +1530,12 @@
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
                 if (board[i][j] !== 0) {
-                    var val = board[i][j];
-                    board[i][j] = 0;
-                    if (!isValidPlacement(board, i, j, val)) {
-                        board[i][j] = val;
-                        return {
-                            valid: false,
-                            message: 'Conflict at Row ' + (i+1) + ', Col ' + (j+1) + ': value ' + val + ' violates constraints.'
-                        };
+                    var v = board[i][j]; board[i][j] = 0;
+                    if (!isValidPlacement(board, i, j, v)) {
+                        board[i][j] = v;
+                        return { valid: false, message: 'Conflict at Row '+(i+1)+', Col '+(j+1)+': value '+v+' violates constraints.' };
                     }
-                    board[i][j] = val;
+                    board[i][j] = v;
                 }
             }
         }
@@ -1298,21 +1543,14 @@
     }
 
     function findEmpty(board) {
-        for (var i = 0; i < 9; i++) {
-            for (var j = 0; j < 9; j++) {
-                if (board[i][j] === 0) return [i, j];
-            }
-        }
+        for (var i = 0; i < 9; i++) for (var j = 0; j < 9; j++) if (board[i][j] === 0) return [i,j];
         return null;
     }
 
     function solveSudoku(board) {
-        var empty = findEmpty(board);
-        if (!empty) return true;
-
-        var row = empty[0];
-        var col = empty[1];
-
+        var e = findEmpty(board);
+        if (!e) return true;
+        var row = e[0], col = e[1];
         for (var num = 1; num <= 9; num++) {
             if (isValidPlacement(board, row, col, num)) {
                 board[row][col] = num;
@@ -1324,15 +1562,12 @@
     }
 
     function displaySudokuSolution(board) {
-        var cells = sudokuGrid.querySelectorAll('.sudoku-cell');
         var delay = 0;
-        cells.forEach(function(cell) {
-            var r = parseInt(cell.dataset.row);
-            var c = parseInt(cell.dataset.col);
+        sudokuGrid.querySelectorAll('.sudoku-cell').forEach(function(cell) {
+            var r = parseInt(cell.dataset.row), c = parseInt(cell.dataset.col);
             var val = board[r][c];
-            cell.value = val || '';
+            cell.value    = val || '';
             cell.readOnly = true;
-
             if (!cell.classList.contains('given') && val !== 0) {
                 cell.style.animationDelay = (delay * 8) + 'ms';
                 cell.classList.add('solved');
@@ -1343,61 +1578,200 @@
 
     function loadSudokuSample() {
         createSudokuGrid();
-        var cells = sudokuGrid.querySelectorAll('.sudoku-cell');
-        cells.forEach(function(cell) {
-            var r = parseInt(cell.dataset.row);
-            var c = parseInt(cell.dataset.col);
-            if (SAMPLE_SUDOKU[r][c] !== 0) {
-                cell.value = SAMPLE_SUDOKU[r][c];
-                cell.classList.add('given');
+        var puzzle = getRandomPuzzle();
+        sudokuGrid.querySelectorAll('.sudoku-cell').forEach(function(cell) {
+            var r = parseInt(cell.dataset.row), c = parseInt(cell.dataset.col);
+            if (puzzle[r][c] !== 0) {
+                cell.value    = puzzle[r][c];
                 cell.readOnly = true;
+                cell.classList.add('given');
             }
         });
-        showToast('Sample puzzle loaded. Click Solve to find the solution.', 'info');
+        showToast('Random puzzle loaded! Click Solve to find the solution.', 'info');
     }
 
     function clearSudoku() {
+        sudokuSolving = false;
+        if (sudokuReplayTimer) { clearTimeout(sudokuReplayTimer); sudokuReplayTimer = null; }
+        document.getElementById('sudoku-solve-btn').innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Solve';
         createSudokuGrid();
+        updateSudokuAlgo(0, 0, 0);
+        var log = document.getElementById('sudoku-log');
+        if (log) log.textContent = 'Waiting to start...';
         showToast('Grid cleared.', 'info');
     }
 
+    // --- Step-by-step UI helpers ---
+    var sudokuSpeedSlider = document.getElementById('sudoku-speed');
+    var sudokuSpeedLabel  = document.getElementById('sudoku-speed-label');
+    var sudokuStepToggle  = document.getElementById('sudoku-step-toggle');
+    var sudokuAlgoPanel   = document.getElementById('sudoku-algo-panel');
+
+    sudokuSpeedSlider.addEventListener('input', function() {
+        sudokuSpeedLabel.textContent = SPEED_LABELS[this.value] || 'Fast';
+    });
+    sudokuStepToggle.addEventListener('change', function() {
+        sudokuAlgoPanel.style.display = this.checked ? 'block' : 'none';
+    });
+
+    function updateSudokuAlgo(tries, backs, placed) {
+        document.getElementById('s-tries').textContent  = tries;
+        document.getElementById('s-backs').textContent  = backs;
+        document.getElementById('s-cells').textContent  = placed;
+    }
+
+    function appendSudokuLog(msg, cls) {
+        var log  = document.getElementById('sudoku-log');
+        if (!log) return;
+        var span = document.createElement('span');
+        span.className   = cls || '';
+        span.textContent = msg + '\n';
+        if (log.children.length > 40) log.removeChild(log.firstChild);
+        log.appendChild(span);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    function getCellEl(r, c) {
+        return sudokuGrid.querySelector('[data-row="'+r+'"][data-col="'+c+'"]');
+    }
+
+    // Collect only board-changing steps (place / backtrack)
+    function collectSudokuSteps(board) {
+        var steps = [], tries = 0, backs = 0, placed = 0;
+
+        function bt(b) {
+            var e = findEmpty(b);
+            if (!e) return true;
+            var row = e[0], col = e[1];
+            for (var num = 1; num <= 9; num++) {
+                tries++;
+                if (isValidPlacement(b, row, col, num)) {
+                    b[row][col] = num; placed++;
+                    steps.push({ type:'place', row:row, col:col, val:num, tries:tries, backs:backs, placed:placed });
+                    if (bt(b)) return true;
+                    b[row][col] = 0; placed--; backs++;
+                    steps.push({ type:'back',  row:row, col:col, val:0,   tries:tries, backs:backs, placed:placed });
+                }
+            }
+            return false;
+        }
+
+        var work   = board.map(function(r) { return r.slice(); });
+        var solved = bt(work);
+        return { steps:steps, solved:solved, finalBoard:work, totalTries:tries, totalBacks:backs };
+    }
+
     function handleSudokuSolve() {
-        var board = readSudokuBoard();
+        // Stop if running
+        if (sudokuSolving) {
+            sudokuSolving = false;
+            if (sudokuReplayTimer) { clearTimeout(sudokuReplayTimer); sudokuReplayTimer = null; }
+            document.getElementById('sudoku-solve-btn').innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Solve';
+            sudokuGrid.querySelectorAll('.sudoku-cell').forEach(function(c) {
+                c.classList.remove('step-try','step-back','step-ok');
+            });
+            showToast('Solver stopped.', 'info');
+            return;
+        }
 
+        var board      = readSudokuBoard();
         var validation = validateSudokuInput(board);
-        if (!validation.valid) {
-            showToast(validation.message, 'error');
-            return;
-        }
+        if (!validation.valid) { showToast(validation.message, 'error'); return; }
+        if (findEmpty(board) === null) { showToast('The grid is already complete!', 'info'); return; }
 
-        if (findEmpty(board) === null) {
-            showToast('The grid is already complete!', 'info');
-            return;
-        }
+        // Mark & lock given cells
+        sudokuGrid.querySelectorAll('.sudoku-cell').forEach(function(cell) {
+            var r = parseInt(cell.dataset.row), c = parseInt(cell.dataset.col);
+            if (board[r][c] !== 0) cell.classList.add('given');
+            cell.readOnly = true;
+        });
 
-        runWithLoading(function() {
-            var solveBoard = board.map(function(row) { return row.slice(); });
-            var success = solveSudoku(solveBoard);
-
-            if (success) {
+        if (!sudokuStepToggle.checked) {
+            // ---- Instant mode ----
+            var solveBoard = board.map(function(r) { return r.slice(); });
+            var ok = solveSudoku(solveBoard);
+            if (ok) {
                 displaySudokuSolution(solveBoard);
-                showToast('Sudoku solved successfully!', 'success');
+                showToast('Sudoku solved!', 'success');
             } else {
                 showToast('No solution exists for this puzzle.', 'error');
+                sudokuGrid.querySelectorAll('.sudoku-cell').forEach(function(c) { c.readOnly = false; c.classList.remove('given'); });
             }
-        }, 500, 'Solving Sudoku...');
+            return;
+        }
+
+        // ---- Step-by-step mode ----
+        var result = collectSudokuSteps(board);
+        if (!result.solved) {
+            showToast('No solution exists for this puzzle.', 'error');
+            sudokuGrid.querySelectorAll('.sudoku-cell').forEach(function(c) { c.readOnly = false; c.classList.remove('given'); });
+            return;
+        }
+
+        var logEl = document.getElementById('sudoku-log');
+        if (logEl) logEl.textContent = '';
+        document.getElementById('sudoku-solve-btn').innerHTML = '<i class="fas fa-stop"></i> Stop';
+        updateSudokuAlgo(0, 0, 0);
+
+        var delay     = parseInt(SUDOKU_SPEEDS[sudokuSpeedSlider.value] || 20);
+        var steps     = result.steps;
+        var stepIndex = 0;
+        sudokuSolving = true;
+
+        var batchSize = delay <= 1 ? 40 : delay <= 6 ? 10 : 1;
+
+        function replayNext() {
+            if (!sudokuSolving) return;
+            if (stepIndex >= steps.length) {
+                // Done
+                sudokuSolving = false;
+                sudokuReplayTimer = null;
+                document.getElementById('sudoku-solve-btn').innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Solve';
+                sudokuGrid.querySelectorAll('.sudoku-cell').forEach(function(c) { c.classList.remove('step-try','step-back','step-ok'); });
+                displaySudokuSolution(result.finalBoard);
+                updateSudokuAlgo(result.totalTries, result.totalBacks, result.steps.filter(function(s){return s.type==='place';}).length);
+                appendSudokuLog('✓ Done!  Tries: '+result.totalTries+'  Backtracks: '+result.totalBacks, 'log-ok');
+                showToast('Solved!  '+result.totalTries+' tries, '+result.totalBacks+' backtracks.', 'success');
+                return;
+            }
+
+            for (var b = 0; b < batchSize && stepIndex < steps.length; b++) {
+                var s    = steps[stepIndex++];
+                var cell = getCellEl(s.row, s.col);
+                if (!cell) continue;
+                cell.classList.remove('step-try','step-back','step-ok');
+                if (s.type === 'place') {
+                    cell.value = s.val;
+                    cell.classList.add('step-ok');
+                    if (b === 0) appendSudokuLog('+ ('+( s.row+1)+','+(s.col+1)+') = '+s.val, 'log-try');
+                } else {
+                    cell.value = '';
+                    cell.classList.add('step-back');
+                    if (b === 0) appendSudokuLog('↩ ('+(s.row+1)+','+(s.col+1)+')', 'log-back');
+                }
+                updateSudokuAlgo(s.tries, s.backs, s.placed);
+            }
+
+            sudokuReplayTimer = setTimeout(replayNext, Math.max(delay, 1));
+        }
+
+        replayNext();
     }
 
     document.getElementById('sudoku-solve-btn').addEventListener('click', handleSudokuSolve);
     document.getElementById('sudoku-sample-btn').addEventListener('click', loadSudokuSample);
     document.getElementById('sudoku-clear-btn').addEventListener('click', clearSudoku);
 
-
     // ============================================================
     // 7. N-QUEENS SOLVER
     // ============================================================
 
-    var nInput = document.getElementById('n-input');
+    // --- State ---
+    var queensSolving     = false;
+    var queensReplayTimer = null;
+    var QUEENS_SPEEDS     = { '1': 900, '2': 450, '3': 180, '4': 60, '5': 15 };
+
+    var nInput      = document.getElementById('n-input');
     var queensBoard = document.getElementById('queens-board');
     var queensStats = document.getElementById('queens-stats');
 
@@ -1411,39 +1785,29 @@
     }
 
     function solveNQueens(n) {
-        var board = [];
+        var board = [], solutions = [];
         for (var i = 0; i < n; i++) board[i] = -1;
-
-        var solutions = [];
-
-        function backtrack(row) {
-            if (row === n) {
-                solutions.push(board.slice());
-                return;
-            }
+        function bt(row) {
+            if (row === n) { solutions.push(board.slice()); return; }
             for (var col = 0; col < n; col++) {
                 if (isQueenSafe(board, row, col)) {
-                    board[row] = col;
-                    backtrack(row + 1);
-                    board[row] = -1;
+                    board[row] = col; bt(row+1); board[row] = -1;
                 }
             }
         }
-
-        backtrack(0);
+        bt(0);
         return solutions;
     }
 
     function createQueensBoard(n) {
         queensBoard.innerHTML = '';
-        queensBoard.style.gridTemplateColumns = 'repeat(' + n + ', 1fr)';
-
+        queensBoard.style.gridTemplateColumns = 'repeat('+n+', 1fr)';
         for (var i = 0; i < n; i++) {
             for (var j = 0; j < n; j++) {
                 var cell = document.createElement('div');
-                cell.className = 'queen-cell ' + ((i + j) % 2 === 0 ? 'light' : 'dark');
-                cell.dataset.row = i;
-                cell.dataset.col = j;
+                cell.className    = 'queen-cell ' + ((i+j)%2===0 ? 'light' : 'dark');
+                cell.dataset.row  = i;
+                cell.dataset.col  = j;
                 queensBoard.appendChild(cell);
             }
         }
@@ -1451,228 +1815,318 @@
 
     function displayQueensSolution(solution, n) {
         createQueensBoard(n);
-
         solution.forEach(function(col, row) {
             setTimeout(function() {
-                var cell = queensBoard.querySelector('[data-row="' + row + '"][data-col="' + col + '"]');
-                if (cell) {
-                    cell.innerHTML = '<i class="fas fa-chess-queen"></i>';
-                    cell.classList.add('queen-placed');
-                }
-            }, row * 140);
+                var cell = queensBoard.querySelector('[data-row="'+row+'"][data-col="'+col+'"]');
+                if (cell) { cell.innerHTML = '<i class="fas fa-chess-queen"></i>'; cell.classList.add('queen-placed'); }
+            }, row * 130);
         });
     }
 
-    function handleQueensSolve() {
-        var n = parseInt(nInput.value);
+    function setQCell(row, col, cls) {
+        var cell = queensBoard.querySelector('[data-row="'+row+'"][data-col="'+col+'"]');
+        if (!cell) return;
+        cell.classList.remove('queen-placed','step-try','step-attack');
+        cell.innerHTML = '';
+        if (cls === 'queen-placed') {
+            cell.innerHTML = '<i class="fas fa-chess-queen"></i>';
+            cell.classList.add('queen-placed');
+        } else if (cls) {
+            cell.classList.add(cls);
+        }
+    }
 
+    function collectQueensSteps(n) {
+        var steps = [], board = [], tries = 0, backs = 0, placed = 0, firstSolution = null;
+        for (var i = 0; i < n; i++) board[i] = -1;
+
+        function bt(row) {
+            if (row === n) { firstSolution = board.slice(); return true; }
+            for (var col = 0; col < n; col++) {
+                tries++;
+                if (isQueenSafe(board, row, col)) {
+                    board[row] = col; placed++;
+                    steps.push({ type:'place',  row:row, col:col, tries:tries, backs:backs, placed:placed });
+                    if (bt(row+1)) return true;
+                    board[row] = -1; placed--; backs++;
+                    steps.push({ type:'back',   row:row, col:col, tries:tries, backs:backs, placed:placed });
+                } else {
+                    steps.push({ type:'reject', row:row, col:col, tries:tries, backs:backs, placed:placed });
+                }
+            }
+            return false;
+        }
+        bt(0);
+        return { steps:steps, solution:firstSolution, totalTries:tries, totalBacks:backs };
+    }
+
+    // --- Queens step UI ---
+    var queensSpeedSlider = document.getElementById('queens-speed');
+    var queensSpeedLabel  = document.getElementById('queens-speed-label');
+    var queensStepToggle  = document.getElementById('queens-step-toggle');
+    var queensAlgoPanel   = document.getElementById('queens-algo-panel');
+
+    queensSpeedSlider.addEventListener('input', function() {
+        queensSpeedLabel.textContent = SPEED_LABELS[this.value] || 'Fast';
+    });
+    queensStepToggle.addEventListener('change', function() {
+        queensAlgoPanel.style.display = this.checked ? 'block' : 'none';
+    });
+
+    function updateQueensAlgo(placed, backs, tries) {
+        document.getElementById('q-placed').textContent = placed;
+        document.getElementById('q-backs').textContent  = backs;
+        document.getElementById('q-tries').textContent  = tries;
+    }
+
+    function appendQueensLog(msg, cls) {
+        var log  = document.getElementById('queens-log');
+        if (!log) return;
+        var span = document.createElement('span');
+        span.className   = cls || '';
+        span.textContent = msg + '\n';
+        if (log.children.length > 40) log.removeChild(log.firstChild);
+        log.appendChild(span);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    function clearQueens() {
+        queensSolving = false;
+        if (queensReplayTimer) { clearTimeout(queensReplayTimer); queensReplayTimer = null; }
+        document.getElementById('queens-solve-btn').innerHTML = '<i class="fas fa-chess-queen"></i> Solve';
+        var n = parseInt(nInput.value) || 8;
+        createQueensBoard(n);
+        queensStats.style.display = 'none';
+        updateQueensAlgo(0, 0, 0);
+        var log = document.getElementById('queens-log');
+        if (log) log.textContent = 'Waiting to start...';
+        showToast('Board cleared.', 'info');
+    }
+
+    function handleQueensSolve() {
+        if (queensSolving) {
+            queensSolving = false;
+            if (queensReplayTimer) { clearTimeout(queensReplayTimer); queensReplayTimer = null; }
+            document.getElementById('queens-solve-btn').innerHTML = '<i class="fas fa-chess-queen"></i> Solve';
+            showToast('Solver stopped.', 'info');
+            return;
+        }
+
+        var n = parseInt(nInput.value);
         if (isNaN(n) || n < 1 || n > 16) {
             showToast('Please enter a board size between 1 and 16.', 'error');
             return;
         }
 
-        runWithLoading(function() {
-            var solutions = solveNQueens(n);
+        var isStep = queensStepToggle.checked && n <= 10;
+        if (queensStepToggle.checked && n > 10) showToast('Step mode best for N ≤ 10. Using instant mode.', 'info');
 
-            if (solutions.length > 0) {
-                queensStats.style.display = 'flex';
-                document.getElementById('queens-solution-count').textContent = solutions.length;
-                document.getElementById('queens-board-size').textContent = n + '\u00D7' + n;
+        if (!isStep) {
+            // Instant
+            runWithLoading(function() {
+                var solutions = solveNQueens(n);
+                if (solutions.length > 0) {
+                    queensStats.style.display = 'flex';
+                    document.getElementById('queens-solution-count').textContent = solutions.length;
+                    document.getElementById('queens-board-size').textContent     = n+'\u00D7'+n;
+                    document.getElementById('queens-backtracks').textContent     = '—';
+                    displayQueensSolution(solutions[0], n);
+                    showToast(solutions.length === 1 ? 'Found 1 unique solution.' : 'Found '+solutions.length+' solutions.', 'success');
+                } else {
+                    queensStats.style.display = 'none';
+                    createQueensBoard(n);
+                    showToast('No solution exists for N = '+n+'.', 'error');
+                }
+            }, 500, 'Solving '+n+'-Queens...');
+            return;
+        }
 
-                displayQueensSolution(solutions[0], n);
+        // Step-by-step
+        var result = collectQueensSteps(n);
+        if (!result.solution) {
+            showToast('No solution exists for N = '+n+'.', 'error');
+            return;
+        }
 
-                var msg = (solutions.length === 1)
-                    ? 'Found 1 unique solution.'
-                    : 'Found ' + solutions.length + ' solutions. Displaying the first one.';
-                showToast(msg, 'success');
-            } else {
-                queensStats.style.display = 'none';
-                createQueensBoard(n);
-                showToast('No solution exists for N = ' + n + '.', 'error');
-            }
-        }, 500, 'Solving ' + n + '-Queens...');
-    }
-
-    function clearQueens() {
-        var n = parseInt(nInput.value) || 8;
         createQueensBoard(n);
         queensStats.style.display = 'none';
-        showToast('Board cleared.', 'info');
+        var qLog = document.getElementById('queens-log');
+        if (qLog) qLog.textContent = '';
+        document.getElementById('queens-solve-btn').innerHTML = '<i class="fas fa-stop"></i> Stop';
+        updateQueensAlgo(0, 0, 0);
+
+        var delay = parseInt(QUEENS_SPEEDS[queensSpeedSlider.value] || 60);
+        var steps = result.steps, qi = 0;
+        queensSolving = true;
+
+        function qNext() {
+            if (!queensSolving) return;
+            if (qi >= steps.length) {
+                // Done — clean board showing solution
+                queensSolving = false;
+                queensReplayTimer = null;
+                document.getElementById('queens-solve-btn').innerHTML = '<i class="fas fa-chess-queen"></i> Solve';
+                createQueensBoard(n);
+                result.solution.forEach(function(col, row) {
+                    setTimeout(function() { setQCell(row, col, 'queen-placed'); }, row * 100);
+                });
+                var allSols = solveNQueens(n);
+                queensStats.style.display = 'flex';
+                document.getElementById('queens-solution-count').textContent = allSols.length;
+                document.getElementById('queens-board-size').textContent     = n+'\u00D7'+n;
+                document.getElementById('queens-backtracks').textContent     = result.totalBacks;
+                updateQueensAlgo(n, result.totalBacks, result.totalTries);
+                appendQueensLog('✓ Done! '+allSols.length+' solution(s), '+result.totalBacks+' backtracks.', 'log-ok');
+                showToast('Solved! '+allSols.length+' total solution(s).', 'success');
+                return;
+            }
+
+            var s = steps[qi++];
+            updateQueensAlgo(s.placed, s.backs, s.tries);
+
+            if (s.type === 'place') {
+                setQCell(s.row, s.col, 'queen-placed');
+                appendQueensLog('✓ Row '+(s.row+1)+' → col '+(s.col+1), 'log-try');
+                queensReplayTimer = setTimeout(qNext, delay);
+            } else if (s.type === 'back') {
+                setQCell(s.row, s.col, '');
+                appendQueensLog('↩ Backtrack row '+(s.row+1), 'log-back');
+                queensReplayTimer = setTimeout(qNext, delay);
+            } else {
+                // reject — show briefly then next
+                setQCell(s.row, s.col, 'step-attack');
+                queensReplayTimer = setTimeout(function() {
+                    setQCell(s.row, s.col, '');
+                    qNext();
+                }, Math.max(delay * 0.4, 4));
+            }
+        }
+
+        qNext();
     }
 
     document.getElementById('queens-solve-btn').addEventListener('click', handleQueensSolve);
     document.getElementById('queens-clear-btn').addEventListener('click', clearQueens);
 
-
     // ============================================================
     // 8. TIMETABLE SCHEDULER
     // ============================================================
-
     var SUBJECT_COLORS = [
-        '#00E5FF', '#A855F7', '#F43F5E', '#10B981',
-        '#FB923C', '#6366F1', '#EAB308', '#EC4899',
-        '#14B8A6', '#8B5CF6', '#F97316', '#06B6D4'
+        '#00E5FF','#A855F7','#F43F5E','#10B981',
+        '#FB923C','#6366F1','#EAB308','#EC4899',
+        '#14B8A6','#8B5CF6','#F97316','#06B6D4'
     ];
-
-    var DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-
+    var DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
     var DEFAULT_SUBJECTS = [
-        { name: 'Mathematics',    teacher: 'Mr. Smith' },
-        { name: 'Advanced Math',  teacher: 'Mr. Smith' },
-        { name: 'Physics',        teacher: 'Ms. Johnson' },
-        { name: 'Chemistry',      teacher: 'Dr. Brown' },
-        { name: 'Lab Chemistry',  teacher: 'Dr. Brown' },
-        { name: 'English',        teacher: 'Ms. Davis' },
-        { name: 'Biology',        teacher: 'Mr. Wilson' },
-        { name: 'Computer Sci',   teacher: 'Ms. Taylor' }
+        { name:'Mathematics',   teacher:'Mr. Smith'   },
+        { name:'Advanced Math', teacher:'Mr. Smith'   },
+        { name:'Physics',       teacher:'Ms. Johnson' },
+        { name:'Chemistry',     teacher:'Dr. Brown'   },
+        { name:'Lab Chemistry', teacher:'Dr. Brown'   },
+        { name:'English',       teacher:'Ms. Davis'   },
+        { name:'Biology',       teacher:'Mr. Wilson'  },
+        { name:'Computer Sci',  teacher:'Ms. Taylor'  }
     ];
-
     var subjects = [];
 
     function renderSubjectList() {
         var list = document.getElementById('subject-list');
         list.innerHTML = '';
-
-        subjects.forEach(function(sub, index) {
+        subjects.forEach(function(sub, idx) {
             var item = document.createElement('div');
             item.className = 'subject-item';
+            var color = SUBJECT_COLORS[idx % SUBJECT_COLORS.length];
             item.innerHTML =
-                '<span class="subject-color-dot" style="background:' + SUBJECT_COLORS[index % SUBJECT_COLORS.length] + ';box-shadow:0 0 8px ' + SUBJECT_COLORS[index % SUBJECT_COLORS.length] + '44"></span>' +
-                '<div class="subject-item-info">' +
-                    '<div class="subject-item-name">' + escapeHtml(sub.name) + '</div>' +
-                    '<div class="subject-item-teacher">' + escapeHtml(sub.teacher) + '</div>' +
-                '</div>' +
-                '<button class="btn-icon" data-remove-index="' + index + '" aria-label="Remove ' + escapeHtml(sub.name) + '" style="width:28px;height:28px;font-size:0.7rem;flex-shrink:0">' +
-                    '<i class="fas fa-times"></i>' +
+                '<span class="subject-color-dot" style="background:'+color+';box-shadow:0 0 8px '+color+'44"></span>'+
+                '<div class="subject-item-info">'+
+                    '<div class="subject-item-name">'+escapeHtml(sub.name)+'</div>'+
+                    '<div class="subject-item-teacher">'+escapeHtml(sub.teacher)+'</div>'+
+                '</div>'+
+                '<button class="btn-icon" data-remove-index="'+idx+'" aria-label="Remove '+escapeHtml(sub.name)+'" style="width:28px;height:28px;font-size:0.7rem;flex-shrink:0">'+
+                    '<i class="fas fa-times"></i>'+
                 '</button>';
             list.appendChild(item);
         });
-
         list.querySelectorAll('[data-remove-index]').forEach(function(btn) {
             btn.addEventListener('click', function() {
-                var idx = parseInt(btn.dataset.removeIndex);
-                var removed = subjects.splice(idx, 1)[0];
+                var i = parseInt(btn.dataset.removeIndex);
+                var removed = subjects.splice(i, 1)[0];
                 renderSubjectList();
-                showToast('Removed "' + removed.name + '".', 'info');
+                showToast('Removed "'+removed.name+'".', 'info');
             });
         });
     }
 
     function addSubject() {
-        var nameInput = document.getElementById('new-subject');
-        var teacherInput = document.getElementById('new-teacher');
-        var name = nameInput.value.trim();
-        var teacher = teacherInput.value.trim();
-
-        if (!name || !teacher) {
-            showToast('Please enter both subject name and teacher.', 'error');
-            return;
-        }
-
-        subjects.push({ name: name, teacher: teacher });
-        nameInput.value = '';
-        teacherInput.value = '';
-        nameInput.focus();
+        var nameEl    = document.getElementById('new-subject');
+        var teacherEl = document.getElementById('new-teacher');
+        var name      = nameEl.value.trim();
+        var teacher   = teacherEl.value.trim();
+        if (!name || !teacher) { showToast('Please enter both subject name and teacher.', 'error'); return; }
+        subjects.push({ name:name, teacher:teacher });
+        nameEl.value = ''; teacherEl.value = '';
+        nameEl.focus();
         renderSubjectList();
-        showToast('Added "' + name + '" taught by ' + teacher + '.', 'success');
+        showToast('Added "'+name+'" taught by '+teacher+'.', 'success');
     }
 
     function solveTimetable(subjectsList, periodsPerDay) {
-        var n = subjectsList.length;
-
-        var slots = [];
-        for (var d = 0; d < DAYS.length; d++) {
-            for (var p = 0; p < periodsPerDay; p++) {
-                slots.push({ dayIndex: d, dayName: DAYS[d], period: p });
-            }
-        }
-
+        var n = subjectsList.length, slots = [], assignment = [], usedSlots = {};
+        for (var d = 0; d < DAYS.length; d++)
+            for (var p = 0; p < periodsPerDay; p++)
+                slots.push({ dayIndex:d, dayName:DAYS[d], period:p });
         if (n > slots.length) return null;
-
-        var assignment = [];
         for (var i = 0; i < n; i++) assignment[i] = -1;
-        var usedSlots = {};
 
-        function hasConsecutiveConflict(idx, slotIdx) {
+        function hasConflict(idx, sIdx) {
             var teacher = subjectsList[idx].teacher;
-            var day = slots[slotIdx].dayIndex;
-            var period = slots[slotIdx].period;
-
+            var day = slots[sIdx].dayIndex, period = slots[sIdx].period;
             for (var i = 0; i < idx; i++) {
                 if (subjectsList[i].teacher === teacher && assignment[i] !== -1) {
-                    var other = slots[assignment[i]];
-                    if (other.dayIndex === day && Math.abs(other.period - period) === 1) {
-                        return true;
-                    }
+                    var o = slots[assignment[i]];
+                    if (o.dayIndex === day && Math.abs(o.period - period) === 1) return true;
                 }
             }
             return false;
         }
-
-        function backtrack(idx) {
+        function bt(idx) {
             if (idx === n) return true;
-
             for (var s = 0; s < slots.length; s++) {
-                if (usedSlots[s]) continue;
-                if (hasConsecutiveConflict(idx, s)) continue;
-
-                usedSlots[s] = true;
-                assignment[idx] = s;
-
-                if (backtrack(idx + 1)) return true;
-
-                delete usedSlots[s];
-                assignment[idx] = -1;
+                if (usedSlots[s] || hasConflict(idx, s)) continue;
+                usedSlots[s] = true; assignment[idx] = s;
+                if (bt(idx+1)) return true;
+                delete usedSlots[s]; assignment[idx] = -1;
             }
             return false;
         }
-
-        if (backtrack(0)) {
-            var result = [];
-            for (var i = 0; i < n; i++) {
-                var slot = slots[assignment[i]];
-                result.push({
-                    subject: subjectsList[i].name,
-                    teacher: subjectsList[i].teacher,
-                    color: SUBJECT_COLORS[i % SUBJECT_COLORS.length],
-                    dayIndex: slot.dayIndex,
-                    dayName: slot.dayName,
-                    period: slot.period
-                });
-            }
-            return result;
+        if (!bt(0)) return null;
+        var result = [];
+        for (var i = 0; i < n; i++) {
+            var slot = slots[assignment[i]];
+            result.push({ subject:subjectsList[i].name, teacher:subjectsList[i].teacher,
+                color:SUBJECT_COLORS[i % SUBJECT_COLORS.length], dayIndex:slot.dayIndex, dayName:slot.dayName, period:slot.period });
         }
-        return null;
+        return result;
     }
 
     function displayTimetable(assignments, periodsPerDay) {
         var output = document.getElementById('timetable-output');
         var legend = document.getElementById('timetable-legend');
-
-        var timetable = {};
-        for (var d = 0; d < DAYS.length; d++) {
-            timetable[d] = {};
-            for (var p = 0; p < periodsPerDay; p++) {
-                timetable[d][p] = null;
-            }
-        }
-        assignments.forEach(function(a) {
-            timetable[a.dayIndex][a.period] = a;
-        });
+        var tt = {};
+        for (var d = 0; d < DAYS.length; d++) { tt[d] = {}; for (var p = 0; p < periodsPerDay; p++) tt[d][p] = null; }
+        assignments.forEach(function(a) { tt[a.dayIndex][a.period] = a; });
 
         var html = '<table class="timetable-table"><thead><tr><th></th>';
-        DAYS.forEach(function(day) { html += '<th>' + day + '</th>'; });
+        DAYS.forEach(function(day) { html += '<th>'+day+'</th>'; });
         html += '</tr></thead><tbody>';
-
         for (var p = 0; p < periodsPerDay; p++) {
-            html += '<tr><th>Period ' + (p + 1) + '</th>';
+            html += '<tr><th>Period '+(p+1)+'</th>';
             for (var d = 0; d < DAYS.length; d++) {
-                var entry = timetable[d][p];
-                if (entry) {
-                    html += '<td class="filled-cell" style="background:' + entry.color + '18;border:1px solid ' + entry.color + '30">' +
-                        '<div class="filled-cell-subject" style="color:' + entry.color + '">' + escapeHtml(entry.subject) + '</div>' +
-                        '<div class="filled-cell-teacher">' + escapeHtml(entry.teacher) + '</div>' +
-                    '</td>';
+                var e = tt[d][p];
+                if (e) {
+                    html += '<td class="filled-cell" style="background:'+e.color+'18;border:1px solid '+e.color+'30;animation-delay:'+((d+p*5)*60)+'ms">'+
+                        '<div class="filled-cell-subject" style="color:'+e.color+'">'+escapeHtml(e.subject)+'</div>'+
+                        '<div class="filled-cell-teacher">'+escapeHtml(e.teacher)+'</div></td>';
                 } else {
                     html += '<td class="empty-cell">&mdash;</td>';
                 }
@@ -1683,64 +2137,46 @@
         output.innerHTML = html;
 
         legend.style.display = 'flex';
-        var legendHtml = '';
+        var lHtml = '';
         assignments.forEach(function(a) {
-            legendHtml += '<div class="legend-item">' +
-                '<span class="legend-dot" style="background:' + a.color + ';box-shadow:0 0 6px ' + a.color + '66"></span>' +
-                escapeHtml(a.subject) +
-            '</div>';
+            lHtml += '<div class="legend-item"><span class="legend-dot" style="background:'+a.color+';box-shadow:0 0 6px '+a.color+'66"></span>'+escapeHtml(a.subject)+'</div>';
         });
-        legend.innerHTML = legendHtml;
+        legend.innerHTML = lHtml;
     }
 
     function handleTimetableGenerate() {
-        if (subjects.length === 0) {
-            showToast('Please add at least one subject.', 'error');
-            return;
-        }
-
+        if (subjects.length === 0) { showToast('Please add at least one subject.', 'error'); return; }
         var periods = parseInt(document.getElementById('periods-input').value);
-        if (isNaN(periods) || periods < 1 || periods > 8) {
-            showToast('Periods per day must be between 1 and 8.', 'error');
-            return;
+        if (isNaN(periods) || periods < 1 || periods > 8) { showToast('Periods per day must be between 1 and 8.', 'error'); return; }
+        if (subjects.length > DAYS.length * periods) {
+            showToast('Too many subjects for the available slots. Increase periods or reduce subjects.', 'error'); return;
         }
-
-        var totalSlots = DAYS.length * periods;
-        if (subjects.length > totalSlots) {
-            showToast('Too many subjects (' + subjects.length + ') for ' + totalSlots + ' available slots. Reduce subjects or increase periods.', 'error');
-            return;
-        }
-
         runWithLoading(function() {
             var result = solveTimetable(subjects, periods);
-
             if (result) {
                 displayTimetable(result, periods);
-                showToast('Timetable generated: ' + subjects.length + ' subjects scheduled!', 'success');
+                showToast('Timetable generated: '+subjects.length+' subjects scheduled!', 'success');
             } else {
                 document.getElementById('timetable-output').innerHTML =
-                    '<p style="text-align:center;padding:48px 0;color:var(--danger)">' +
-                        '<i class="fas fa-triangle-exclamation" style="font-size:2rem;display:block;margin-bottom:14px"></i>' +
-                        'No valid timetable found. Try reducing subjects, adding more periods, or removing overlapping teacher assignments.' +
-                    '</p>';
+                    '<p style="text-align:center;padding:48px 0;color:var(--danger)">'+
+                    '<i class="fas fa-triangle-exclamation" style="font-size:2rem;display:block;margin-bottom:14px"></i>'+
+                    'No valid timetable found. Try adding more periods or removing teacher conflicts.</p>';
                 document.getElementById('timetable-legend').style.display = 'none';
-                showToast('No valid timetable exists with current constraints.', 'error');
+                showToast('No valid timetable with current constraints.', 'error');
             }
         }, 600, 'Generating timetable...');
     }
 
     function resetTimetable() {
-        subjects = DEFAULT_SUBJECTS.map(function(s) { return { name: s.name, teacher: s.teacher }; });
-        document.getElementById('periods-input').value = 3;
-        document.getElementById('new-subject').value = '';
-        document.getElementById('new-teacher').value = '';
+        subjects = DEFAULT_SUBJECTS.map(function(s) { return { name:s.name, teacher:s.teacher }; });
+        document.getElementById('periods-input').value  = 3;
+        document.getElementById('new-subject').value    = '';
+        document.getElementById('new-teacher').value    = '';
         renderSubjectList();
-
         document.getElementById('timetable-output').innerHTML =
-            '<p class="text-muted text-center" style="padding:48px 0">' +
-                '<i class="fas fa-calendar-xmark" style="font-size:2.2rem;display:block;margin-bottom:14px;opacity:0.2"></i>' +
-                'Configure your subjects and click Generate to create a timetable.' +
-            '</p>';
+            '<p class="text-muted text-center" style="padding:48px 0">'+
+            '<i class="fas fa-calendar-xmark" style="font-size:2.2rem;display:block;margin-bottom:14px;opacity:0.2"></i>'+
+            'Configure your subjects and click Generate to create a timetable.</p>';
         document.getElementById('timetable-legend').style.display = 'none';
         showToast('Timetable reset to defaults.', 'info');
     }
@@ -1748,26 +2184,17 @@
     document.getElementById('add-subject-btn').addEventListener('click', addSubject);
     document.getElementById('timetable-generate-btn').addEventListener('click', handleTimetableGenerate);
     document.getElementById('timetable-clear-btn').addEventListener('click', resetTimetable);
-
-    document.getElementById('new-subject').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') addSubject();
-    });
-    document.getElementById('new-teacher').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') addSubject();
-    });
-
+    document.getElementById('new-subject').addEventListener('keydown', function(e) { if (e.key==='Enter') addSubject(); });
+    document.getElementById('new-teacher').addEventListener('keydown', function(e) { if (e.key==='Enter') addSubject(); });
 
     // ============================================================
-    // 9. INITIALIZATION
+    // 9. INIT
     // ============================================================
-
     (function init() {
         loadTheme();
         createSudokuGrid();
         createQueensBoard(8);
-        subjects = DEFAULT_SUBJECTS.map(function(s) {
-            return { name: s.name, teacher: s.teacher };
-        });
+        subjects = DEFAULT_SUBJECTS.map(function(s) { return { name:s.name, teacher:s.teacher }; });
         renderSubjectList();
     })();
 
