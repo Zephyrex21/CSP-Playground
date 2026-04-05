@@ -1718,7 +1718,7 @@
         var stepIndex = 0;
         sudokuSolving = true;
 
-        var batchSize = delay <= 1 ? 40 : delay <= 6 ? 10 : 1;
+        var batchSize = delay <= 8 ? 15 : delay <= 40 ? 3 : 1;
 
         function replayNext() {
             if (!sudokuSolving) return;
