@@ -1449,7 +1449,7 @@
     // --- State (all declared before any function uses them) ---
     var sudokuSolving     = false;
     var sudokuReplayTimer = null;
-    var SUDOKU_SPEEDS     = { '1': 1000, '2': 600, '3': 250, '4': 80, '5': 16 };
+    var SUDOKU_SPEEDS     = { '1': 1000, '2': 750, '3': 500, '4': 250, '5': 125 };
     var SPEED_LABELS      = { '1': 'Slow', '2': 'Med', '3': 'Fast', '4': 'Turbo', '5': 'Max' };
 
     var sudokuGrid = document.getElementById('sudoku-grid');
@@ -1769,7 +1769,7 @@
     // --- State ---
     var queensSolving     = false;
     var queensReplayTimer = null;
-    var QUEENS_SPEEDS     = { '1': 1000, '2': 650, '3': 280, '4': 100, '5': 25 };
+    var QUEENS_SPEEDS     = { '1': 1000, '2': 750, '3': 500, '4': 250, '5': 125 };
 
     var nInput      = document.getElementById('n-input');
     var queensBoard = document.getElementById('queens-board');
