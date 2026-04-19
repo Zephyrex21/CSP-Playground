@@ -386,7 +386,7 @@
         }
 
         /* ===== HOME PAGE ===== */
-        .hero { text-align: center; padding: 56px 0 36px; }
+        .hero { text-align: center; padding: 48px 0 24px; }
         .hero-badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; }
         .hero-badge .badge {
             animation: badgePulse 3s ease-in-out infinite;
@@ -427,7 +427,7 @@
         .concepts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px; margin: 56px 0;
+            gap: 24px; margin: 0 0 0 0;
         }
         .concept-card { padding: 28px; }
         .concept-icon {
@@ -457,13 +457,7 @@
             letter-spacing: -0.01em;
         }
         .concept-card p { color: var(--fg-muted); font-size: 0.9rem; line-height: 1.7; }
-        .solvers-heading {
-            font-family: var(--font-display); font-size: 1.1rem;
-            font-weight: 700; text-align: center;
-            margin: 56px 0 28px; color: var(--fg-muted);
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-        }
+        .solvers-heading { display: none; }
         .solvers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
@@ -784,6 +778,199 @@
             *,*::before,*::after { animation-duration:0.01ms!important; transition-duration:0.01ms!important; }
         }
 
+        /* ===== PARTICLE CANVAS ===== */
+        #particle-canvas {
+            position:absolute; top:0; left:0; width:100%; height:100%;
+            pointer-events:none; z-index:0; opacity:0.55;
+        }
+        .hero { position:relative; overflow:visible; }
+
+        /* ===== GLITCH / TYPEWRITER TITLE ===== */
+        /* glitch keyframes removed - no longer used */
+        /* ===== HERO TITLE STATIC LINE ===== */
+        .hero-title-static { margin-bottom: 2px; }
+
+        /* ===== TYPEWRITER ROW ===== */
+        .hero-typewriter-row {
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; flex-wrap: nowrap; margin-bottom: 4px;
+            /* Fixed height prevents layout shift when text changes */
+            min-height: clamp(2rem, 4vw, 2.6rem);
+        }
+        .hero-typewriter-prefix {
+            font-family: var(--font-display);
+            font-size: clamp(1.2rem, 2.8vw, 1.7rem);
+            font-weight: 600;
+            color: var(--fg-muted);
+            letter-spacing: -0.02em;
+            flex-shrink: 0;
+        }
+        /* The wrap is purely a flex container — NO pseudo-elements, no position tricks */
+        .hero-title-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 0;
+            /* No position:relative, no ::before/::after */
+        }
+        .hero-typewriter-text {
+            font-family: var(--font-display);
+            font-size: clamp(1.2rem, 2.8vw, 1.7rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            /* Prevent layout collapse when empty */
+            min-width: 1px;
+            display: inline-block;
+        }
+        .cursor-blink {
+            display: inline-block;
+            width: 2.5px;
+            height: 1.1em;
+            background: var(--accent);
+            margin-left: 3px;
+            vertical-align: middle;
+            border-radius: 1px;
+            animation: blink 1s step-end infinite;
+            flex-shrink: 0;
+        }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+        /* ===== HOMEPAGE SECTIONS DIVIDER ===== */
+        .home-divider {
+            display: flex; align-items: center; gap: 18px;
+            margin: 52px 0 36px;
+        }
+        .home-divider-line {
+            flex: 1; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--card-border), transparent);
+        }
+        .home-divider-label {
+            font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+            color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.1em;
+            white-space: nowrap;
+        }
+
+        /* ===== HOMEPAGE CTA ROW ===== */
+        .hero-cta-row {
+            display: flex; gap: 14px; justify-content: center;
+            flex-wrap: wrap; margin-top: 32px;
+        }
+
+
+        .hero-stats { display:flex; gap:32px; justify-content:center; flex-wrap:wrap; margin-top:32px; }
+        .hero-stat { text-align:center; }
+        .hero-stat-num {
+            font-family:var(--font-display); font-size:1.8rem; font-weight:800;
+            background:var(--gradient-main); -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent; background-clip:text;
+        }
+        .hero-stat-label { font-size:0.72rem; color:var(--fg-muted); font-weight:600; letter-spacing:0.06em; text-transform:uppercase; margin-top:2px; }
+
+        /* ===== SCROLL REVEAL ===== */
+        .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.6s ease, transform 0.6s ease; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-d1 { transition-delay:0.05s; }
+        .reveal-d2 { transition-delay:0.12s; }
+        .reveal-d3 { transition-delay:0.19s; }
+
+        /* ===== CONFETTI CANVAS ===== */
+        #confetti-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:500; }
+
+        /* ===== DIFFICULTY SELECTOR ===== */
+        .difficulty-bar { display:flex; gap:6px; margin-bottom:16px; }
+        .diff-btn {
+            flex:1; padding:7px 10px; border:1px solid var(--card-border);
+            border-radius:var(--radius-xs); background:var(--card); color:var(--fg-muted);
+            font-family:var(--font-display); font-size:0.74rem; font-weight:700;
+            cursor:pointer; transition:all 0.25s; letter-spacing:0.03em;
+        }
+        .diff-btn:hover { border-color:var(--card-border-hover); color:var(--fg); }
+        .diff-btn.active { background:var(--gradient-btn); color:#fff; border-color:transparent; }
+
+        /* ===== METRICS STRIP ===== */
+        .metrics-strip {
+            display:none; flex-wrap:wrap; gap:10px; margin-top:16px;
+            padding:14px 18px; background:var(--input-bg);
+            border:1px solid var(--card-border); border-radius:var(--radius-sm);
+        }
+        .metrics-strip.visible { display:flex; }
+        .metric-chip { display:flex; flex-direction:column; align-items:center; gap:2px; flex:1; min-width:70px; }
+        .metric-val { font-family:var(--font-display); font-size:1.05rem; font-weight:800; background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .metric-lbl { font-size:0.65rem; color:var(--fg-muted); font-weight:600; letter-spacing:0.04em; text-transform:uppercase; }
+
+        /* ===== EXPORT BUTTON ===== */
+        .export-btn { font-size:0.78rem; padding:8px 16px; }
+
+        /* ===== CONSTRAINT GRAPH ===== */
+        .graph-layout { display:flex; flex-direction:column; gap:28px; }
+        .graph-canvas-wrap {
+            background:var(--card); border:1px solid var(--card-border);
+            border-radius:var(--radius); overflow:hidden;
+            position:relative; min-height:420px;
+        }
+        #cg-canvas { width:100%; height:420px; display:block; cursor:grab; }
+        #cg-canvas:active { cursor:grabbing; }
+        .graph-controls-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+        .graph-legend { display:flex; gap:18px; flex-wrap:wrap; margin-top:4px; }
+        .graph-legend-item { display:flex; align-items:center; gap:6px; font-size:0.78rem; color:var(--fg-muted); font-weight:600; }
+        .graph-legend-dot { width:10px; height:10px; border-radius:50%; }
+        .demo-select { font-family:var(--font-body); font-size:0.84rem; padding:8px 14px; border:1px solid var(--input-border); border-radius:var(--radius-sm); background:var(--input-bg); color:var(--fg); outline:none; cursor:pointer; }
+        .arc-info { font-size:0.8rem; color:var(--fg-muted); padding:10px 16px; background:var(--input-bg); border:1px solid var(--card-border); border-radius:var(--radius-sm); min-height:38px; }
+
+        /* ===== UNDO HINT ===== */
+        .undo-hint { font-size:0.7rem; color:var(--fg-muted); opacity:0.7; }
+
+        /* ===== SUDOKU TIMER ===== */
+        .sudoku-timer-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+        .sudoku-timer { font-family:var(--font-display); font-size:1.5rem; font-weight:800; background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:0.04em; min-width:80px; }
+        .hint-btn { font-size:0.78rem; padding:7px 14px; }
+
+        /* ===== QUEENS SOLUTION BROWSER ===== */
+        .sol-browser { display:none; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:10px; }
+        .sol-browser.visible { display:flex; }
+        .sol-nav-btn { width:36px; height:36px; border:1px solid var(--card-border); border-radius:var(--radius-xs); background:var(--card); color:var(--fg-muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.8rem; transition:all 0.25s; }
+        .sol-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+        .sol-counter { font-family:var(--font-display); font-size:0.88rem; font-weight:700; color:var(--fg-muted); min-width:80px; text-align:center; }
+
+        /* ===== SOUND TOGGLE ===== */
+        .sound-btn { width:42px; height:42px; border:1px solid var(--card-border); border-radius:50%; background:var(--card); backdrop-filter:blur(10px); color:var(--fg-muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.88rem; transition:all 0.35s; flex-shrink:0; }
+        .sound-btn:hover { background:var(--card-hover); border-color:var(--accent); color:var(--accent); }
+        .sound-btn.muted { opacity:0.45; }
+
+        /* ===== SHORTCUTS PANEL ===== */
+        .shortcuts-overlay { display:none; position:fixed; inset:0; background:var(--overlay); backdrop-filter:blur(12px); z-index:250; align-items:center; justify-content:center; }
+        .shortcuts-overlay.open { display:flex; }
+        .shortcuts-card { padding:32px 36px; max-width:500px; width:90%; position:relative; }
+        .shortcuts-card h3 { font-family:var(--font-display); font-size:1.15rem; font-weight:800; margin-bottom:18px; }
+        .shortcuts-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px 20px; }
+        .shortcut-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:7px 0; border-bottom:1px solid var(--card-border); }
+        .shortcut-key { font-family:'Courier New',monospace; font-size:0.72rem; font-weight:700; padding:2px 8px; background:var(--input-bg); border:1px solid var(--card-border); border-radius:5px; color:var(--accent); white-space:nowrap; }
+        .shortcut-desc { font-size:0.76rem; color:var(--fg-muted); }
+        .shortcuts-close { position:absolute; top:14px; right:16px; background:none; border:none; color:var(--fg-muted); font-size:1.1rem; cursor:pointer; transition:color 0.2s; }
+        .shortcuts-close:hover { color:var(--danger); }
+
+        /* ===== MOBILE NUMPAD ===== */
+        .numpad { display:none; grid-template-columns:repeat(5,1fr); gap:6px; margin-top:12px; max-width:410px; width:100%; }
+        @media(max-width:600px){ .numpad { display:grid; } }
+        .numpad-key { padding:10px 4px; border:1px solid var(--card-border); border-radius:var(--radius-xs); background:var(--card); color:var(--fg); font-family:var(--font-display); font-size:1rem; font-weight:700; cursor:pointer; transition:all 0.2s; text-align:center; }
+        .numpad-key:active { transform:scale(0.92); }
+        .numpad-key.accent { background:var(--gradient-btn); color:#fff; border-color:transparent; }
+
+        /* ===== SOLVE HISTORY ===== */
+        .history-section { margin-top:32px; }
+        .history-title { font-family:var(--font-display); font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--fg-muted); margin-bottom:12px; }
+        .history-list { display:flex; flex-direction:column; gap:7px; }
+        .history-entry { display:flex; align-items:center; gap:12px; padding:10px 14px; background:var(--input-bg); border:1px solid var(--card-border); border-radius:var(--radius-sm); font-size:0.8rem; }
+        .history-badge { font-size:0.65rem; font-weight:700; padding:2px 8px; border-radius:100px; text-transform:uppercase; letter-spacing:0.04em; flex-shrink:0; }
+        .hb-easy { background:rgba(16,185,129,0.12); color:var(--success); border:1px solid rgba(16,185,129,0.2); }
+        .hb-medium { background:rgba(251,146,60,0.12); color:#FB923C; border:1px solid rgba(251,146,60,0.2); }
+        .hb-hard { background:rgba(244,63,94,0.12); color:var(--danger); border:1px solid rgba(244,63,94,0.2); }
+        .history-meta { flex:1; color:var(--fg-muted); }
+        .history-time { font-family:var(--font-display); font-weight:700; color:var(--accent); }
+
         /* ===== ALGORITHM PANEL ===== */
         .algo-panel {
             background: var(--card);
@@ -1021,6 +1208,27 @@
 </head>
 <body>
 
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+    <!-- Shortcuts overlay -->
+    <div class="shortcuts-overlay" id="shortcuts-overlay" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
+        <div class="glass-card shortcuts-card">
+            <button class="shortcuts-close" id="shortcuts-close" aria-label="Close shortcuts"><i class="fas fa-xmark"></i></button>
+            <h3><i class="fas fa-keyboard text-accent" style="margin-right:10px"></i>Keyboard Shortcuts</h3>
+            <div class="shortcuts-grid">
+                <div class="shortcut-row"><span class="shortcut-desc">Navigate cells</span><span class="shortcut-key">↑ ↓ ← →</span></div>
+                <div class="shortcut-row"><span class="shortcut-desc">Enter digit</span><span class="shortcut-key">1–9</span></div>
+                <div class="shortcut-row"><span class="shortcut-desc">Clear cell</span><span class="shortcut-key">Del / 0</span></div>
+                <div class="shortcut-row"><span class="shortcut-desc">Undo</span><span class="shortcut-key">Ctrl+Z</span></div>
+                <div class="shortcut-row"><span class="shortcut-desc">Solve puzzle</span><span class="shortcut-key">Ctrl+Enter</span></div>
+                <div class="shortcut-row"><span class="shortcut-desc">Get hint</span><span class="shortcut-key">Ctrl+H</span></div>
+                <div class="shortcut-row"><span class="shortcut-desc">Random puzzle</span><span class="shortcut-key">Ctrl+R</span></div>
+                <div class="shortcut-row"><span class="shortcut-desc">Clear board</span><span class="shortcut-key">Ctrl+D</span></div>
+                <div class="shortcut-row"><span class="shortcut-desc">Toggle sound</span><span class="shortcut-key">Ctrl+M</span></div>
+                <div class="shortcut-row"><span class="shortcut-desc">This panel</span><span class="shortcut-key">?</span></div>
+            </div>
+        </div>
+    </div>
     <div class="orb orb-1" aria-hidden="true"></div>
     <div class="orb orb-2" aria-hidden="true"></div>
     <div class="orb orb-3" aria-hidden="true"></div>
@@ -1043,7 +1251,13 @@
             <button class="nav-tab" data-target="timetable" role="tab" aria-selected="false">
                 <i class="fas fa-calendar-days" style="margin-right:5px;font-size:0.78em"></i> Timetable
             </button>
+            <button class="nav-tab" data-target="graph" role="tab" aria-selected="false">
+                <i class="fas fa-diagram-project" style="margin-right:5px;font-size:0.78em"></i> Graph
+            </button>
         </div>
+        <button class="sound-btn" id="sound-toggle" aria-label="Toggle sound">
+            <i class="fas fa-volume-high"></i>
+        </button>
         <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
             <i class="fas fa-moon"></i>
         </button>
@@ -1053,37 +1267,65 @@
 
         <section id="home" class="section active" role="tabpanel">
             <div class="hero">
+                <canvas id="particle-canvas" aria-hidden="true"></canvas>
                 <div class="hero-badge">
                     <span class="badge badge-accent">Constraint Satisfaction</span>
                 </div>
-                <h1 class="hero-title">CSP Playground</h1>
-                <p class="hero-subtitle">
-                    Explore the power of Constraint Satisfaction Problems through
-                    interactive solvers for Sudoku, N-Queens, and Timetable Scheduling.
+                <div class="hero-title-static">
+                    <h1 class="hero-title">CSP Playground</h1>
+                </div>
+                <div class="hero-typewriter-row">
+                    <span class="hero-typewriter-prefix">Explore</span>
+                    <div class="hero-title-wrap" data-text="" id="hero-title-wrap">
+                        <span class="hero-typewriter-text" id="hero-title-text"></span><span class="cursor-blink"></span>
+                    </div>
+                </div>
+                <p class="hero-subtitle" style="margin-top:24px">
+                    Interactive visualizations for Constraint Satisfaction Problems — watch backtracking algorithms think in real time through Sudoku, N-Queens, Graph Coloring, and Timetable Scheduling.
                 </p>
+                <div class="hero-cta-row">
+                    <button class="btn-primary" data-navigate="sudoku"><i class="fas fa-wand-magic-sparkles"></i> Start Solving</button>
+                    <button class="btn-secondary" data-navigate="graph"><i class="fas fa-diagram-project"></i> View Graph</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat"><div class="hero-stat-num" data-count="4">0</div><div class="hero-stat-label">Solvers</div></div>
+                    <div class="hero-stat"><div class="hero-stat-num" data-count="81">0</div><div class="hero-stat-label">Sudoku Cells</div></div>
+                    <div class="hero-stat"><div class="hero-stat-num" data-count="92">0</div><div class="hero-stat-label">Queens Solutions</div></div>
+                    <div class="hero-stat"><div class="hero-stat-num" data-count="100">0</div><div class="hero-stat-label">% Browser-based</div></div>
+                </div>
+            </div>
+
+            <div class="home-divider">
+                <div class="home-divider-line"></div>
+                <div class="home-divider-label"><i class="fas fa-lightbulb" style="margin-right:6px"></i>Core Concepts</div>
+                <div class="home-divider-line"></div>
             </div>
 
             <div class="concepts-grid">
-                <div class="glass-card concept-card animate-in delay-1">
+                <div class="glass-card concept-card animate-in delay-1 reveal reveal-d1">
                     <div class="concept-icon variables"><i class="fas fa-cube"></i></div>
                     <h3>Variables</h3>
                     <p>The unknowns we need to determine. In Sudoku, each empty cell is a variable. In N-Queens, each row's queen position. In scheduling, each subject's time slot.</p>
                 </div>
-                <div class="glass-card concept-card animate-in delay-2">
+                <div class="glass-card concept-card animate-in delay-2 reveal reveal-d2">
                     <div class="concept-icon domains"><i class="fas fa-list-check"></i></div>
                     <h3>Domains</h3>
                     <p>The set of possible values for each variable. A Sudoku cell can hold 1-9, a queen can be placed in any column, and a subject can occupy any available slot.</p>
                 </div>
-                <div class="glass-card concept-card animate-in delay-3">
+                <div class="glass-card concept-card animate-in delay-3 reveal reveal-d3">
                     <div class="concept-icon constraints"><i class="fas fa-link-slash"></i></div>
                     <h3>Constraints</h3>
                     <p>Rules that restrict variable assignments. No duplicate numbers in a row, no attacking queens, no teacher conflicts. Constraints define the problem's logic.</p>
                 </div>
             </div>
 
-            <p class="solvers-heading">Explore the Solvers</p>
+            <div class="home-divider">
+                <div class="home-divider-line"></div>
+                <div class="home-divider-label"><i class="fas fa-rocket" style="margin-right:6px"></i>Explore the Solvers</div>
+                <div class="home-divider-line"></div>
+            </div>
             <div class="solvers-grid">
-                <div class="glass-card solver-card animate-in delay-1" data-navigate="sudoku" tabindex="0" role="button">
+                <div class="glass-card solver-card animate-in delay-1 reveal reveal-d1" data-navigate="sudoku" tabindex="0" role="button">
                     <div class="solver-card-header">
                         <div class="solver-card-icon sudoku"><i class="fas fa-table-cells"></i></div>
                         <div><h3>Sudoku Solver</h3><span>Backtracking CSP</span></div>
@@ -1091,7 +1333,7 @@
                     <p>Fill a 9x9 grid so every row, column, and 3x3 block contains digits 1-9 exactly once. Watch the backtracking algorithm find the solution.</p>
                     <div class="card-arrow">Try it <i class="fas fa-arrow-right"></i></div>
                 </div>
-                <div class="glass-card solver-card animate-in delay-2" data-navigate="queens" tabindex="0" role="button">
+                <div class="glass-card solver-card animate-in delay-2 reveal reveal-d2" data-navigate="queens" tabindex="0" role="button">
                     <div class="solver-card-header">
                         <div class="solver-card-icon queens"><i class="fas fa-chess-queen"></i></div>
                         <div><h3>N-Queens Solver</h3><span>Backtracking CSP</span></div>
@@ -1099,7 +1341,7 @@
                     <p>Place N queens on an NxN board so no two queens attack each other. Choose any board size and see all valid configurations.</p>
                     <div class="card-arrow">Try it <i class="fas fa-arrow-right"></i></div>
                 </div>
-                <div class="glass-card solver-card animate-in delay-3" data-navigate="timetable" tabindex="0" role="button">
+                <div class="glass-card solver-card animate-in delay-3 reveal reveal-d3" data-navigate="timetable" tabindex="0" role="button">
                     <div class="solver-card-header">
                         <div class="solver-card-icon timetable"><i class="fas fa-calendar-days"></i></div>
                         <div><h3>Timetable Scheduler</h3><span>Constraint-Based CSP</span></div>
@@ -1115,11 +1357,41 @@
             <p class="section-desc mb-16">Enter a puzzle or load a random sample. Toggle step-by-step mode to watch the backtracking algorithm think in real time.</p>
             <div class="sudoku-layout">
                 <div class="sudoku-grid-wrapper">
+                    <div class="sudoku-timer-row">
+                        <div class="sudoku-timer" id="sudoku-timer">00:00</div>
+                        <button class="btn-secondary hint-btn" id="sudoku-hint-btn"><i class="fas fa-lightbulb"></i> Hint</button>
+                        <button class="btn-secondary hint-btn" id="shortcuts-open-btn"><i class="fas fa-keyboard"></i></button>
+                    </div>
+                    <div class="difficulty-bar">
+                        <button class="diff-btn active" data-diff="easy">Easy</button>
+                        <button class="diff-btn" data-diff="medium">Medium</button>
+                        <button class="diff-btn" data-diff="hard">Hard</button>
+                    </div>
                     <div class="sudoku-grid" id="sudoku-grid" role="grid" aria-label="Sudoku puzzle grid"></div>
                     <div class="sudoku-controls">
                         <button class="btn-primary" id="sudoku-solve-btn"><i class="fas fa-wand-magic-sparkles"></i> Solve</button>
                         <button class="btn-secondary" id="sudoku-sample-btn"><i class="fas fa-dice"></i> Random Puzzle</button>
                         <button class="btn-secondary" id="sudoku-clear-btn"><i class="fas fa-eraser"></i> Clear</button>
+                        <button class="btn-secondary export-btn" id="sudoku-export-btn"><i class="fas fa-download"></i> Export</button>
+                    </div>
+                    <div class="metrics-strip" id="sudoku-metrics">
+                        <div class="metric-chip"><div class="metric-val" id="m-tries">0</div><div class="metric-lbl">Tries</div></div>
+                        <div class="metric-chip"><div class="metric-val" id="m-backs">0</div><div class="metric-lbl">Backtracks</div></div>
+                        <div class="metric-chip"><div class="metric-val" id="m-time">0ms</div><div class="metric-lbl">Time</div></div>
+                        <div class="metric-chip"><div class="metric-val" id="m-cells">0</div><div class="metric-lbl">Cells Solved</div></div>
+                    </div>
+                    <!-- Mobile numpad -->
+                    <div class="numpad" id="sudoku-numpad">
+                        <button class="numpad-key" data-num="1">1</button>
+                        <button class="numpad-key" data-num="2">2</button>
+                        <button class="numpad-key" data-num="3">3</button>
+                        <button class="numpad-key" data-num="4">4</button>
+                        <button class="numpad-key" data-num="5">5</button>
+                        <button class="numpad-key" data-num="6">6</button>
+                        <button class="numpad-key" data-num="7">7</button>
+                        <button class="numpad-key" data-num="8">8</button>
+                        <button class="numpad-key" data-num="9">9</button>
+                        <button class="numpad-key accent" data-num="0"><i class="fas fa-delete-left"></i></button>
                     </div>
                     <div class="step-controls">
                         <label class="step-mode-toggle">
@@ -1131,7 +1403,7 @@
                         </label>
                         <label style="font-size:0.78rem;color:var(--fg-muted);font-weight:600">Speed</label>
                         <input type="range" class="speed-slider" id="sudoku-speed" min="1" max="5" value="3" style="min-width:60px;max-width:100px">
-                        <span id="sudoku-speed-label" style="font-size:0.75rem;color:var(--accent);font-weight:700;min-width:28px">Med</span>
+                        <span id="sudoku-speed-label" style="font-size:0.75rem;color:var(--accent);font-weight:700;min-width:28px">Fast</span>
                     </div>
                 </div>
                 <div class="sudoku-info glass-card">
@@ -1144,6 +1416,13 @@
                     </ol>
                     <div class="constraints-note mt-16">
                         <strong>Tip:</strong> Enable step-by-step to see each try <span style="color:var(--accent)">&#9679;</span> and backtrack <span style="color:var(--danger)">&#9679;</span> live.
+                    </div>
+                    <p class="undo-hint mt-12"><i class="fas fa-rotate-left"></i> Ctrl+Z to undo &nbsp;·&nbsp; Press <strong>?</strong> for shortcuts</p>
+                    <div class="history-section">
+                        <div class="history-title"><i class="fas fa-clock-rotate-left" style="margin-right:6px"></i>Solve History</div>
+                        <div class="history-list" id="solve-history-list">
+                            <div style="font-size:0.78rem;color:var(--fg-muted);opacity:0.6">No solves yet. Solve a puzzle to record it here.</div>
+                        </div>
                     </div>
                     <div class="algo-panel" id="sudoku-algo-panel" style="display:none">
                         <div class="algo-panel-header">
@@ -1180,6 +1459,7 @@
                     <input type="number" id="n-input" class="input-field" value="8" min="1" max="16" aria-label="Number of queens">
                     <button class="btn-primary" id="queens-solve-btn"><i class="fas fa-chess-queen"></i> Solve</button>
                     <button class="btn-secondary" id="queens-clear-btn"><i class="fas fa-eraser"></i> Clear</button>
+                    <button class="btn-secondary export-btn" id="queens-export-btn"><i class="fas fa-download"></i> Export</button>
                 </div>
                 <!-- Step controls for queens -->
                 <div class="step-controls" style="max-width:520px;width:100%">
@@ -1192,7 +1472,7 @@
                     </label>
                     <label style="font-size:0.78rem;color:var(--fg-muted);font-weight:600">Speed</label>
                     <input type="range" class="speed-slider" id="queens-speed" min="1" max="5" value="3" style="min-width:60px;max-width:100px">
-                    <span id="queens-speed-label" style="font-size:0.75rem;color:var(--accent);font-weight:700;min-width:28px">Med</span>
+                    <span id="queens-speed-label" style="font-size:0.75rem;color:var(--accent);font-weight:700;min-width:28px">Fast</span>
                 </div>
                 <div class="queens-stats" id="queens-stats" style="display:none">
                     <div class="glass-card stat-item">
@@ -1209,6 +1489,15 @@
                     </div>
                 </div>
                 <div class="queens-board" id="queens-board" aria-label="N-Queens chessboard"></div>
+                <!-- Solution Browser -->
+                <div class="sol-browser" id="sol-browser">
+                    <button class="sol-nav-btn" id="sol-prev-btn" aria-label="Previous solution"><i class="fas fa-chevron-left"></i></button>
+                    <div>
+                        <div class="sol-counter" id="sol-counter">1 / 92</div>
+                        <div class="sol-label" style="text-align:center;margin-top:2px">Solution</div>
+                    </div>
+                    <button class="sol-nav-btn" id="sol-next-btn" aria-label="Next solution"><i class="fas fa-chevron-right"></i></button>
+                </div>
                 <div class="constraints-note" style="max-width:520px;text-align:center">
                     <strong>Constraints:</strong> No two queens share the same column, row, or diagonal. Each solution places exactly N queens with zero conflicts.
                 </div>
@@ -1293,6 +1582,37 @@
                         </p>
                     </div>
                     <div class="timetable-legend" id="timetable-legend" style="display:none"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="graph" class="section" role="tabpanel">
+            <h2 class="section-title">Constraint Graph Visualizer</h2>
+            <p class="section-desc mb-16">Visualize CSP problems as interactive graphs — variables as nodes, constraints as edges. Watch arc consistency propagate in real time.</p>
+            <div class="graph-layout">
+                <div class="glass-card" style="padding:20px 24px">
+                    <div class="graph-controls-row">
+                        <select class="demo-select" id="graph-demo-select">
+                            <option value="map">Map Coloring — Australia</option>
+                            <option value="sudoku3">Sudoku (3-cell)</option>
+                            <option value="scheduling">Course Scheduling</option>
+                            <option value="queens4">4-Queens</option>
+                        </select>
+                        <button class="btn-primary" id="graph-ac-btn" style="font-size:0.82rem;padding:9px 20px"><i class="fas fa-play"></i> Run Arc Consistency</button>
+                        <button class="btn-secondary" id="graph-reset-btn" style="font-size:0.82rem;padding:9px 18px"><i class="fas fa-rotate-right"></i> Reset</button>
+                    </div>
+                    <div class="arc-info mt-12" id="arc-info">Select a demo and click Run Arc Consistency to watch domain pruning propagate through the graph.</div>
+                </div>
+                <div class="graph-canvas-wrap">
+                    <canvas id="cg-canvas" aria-label="Constraint graph visualization"></canvas>
+                </div>
+                <div class="glass-card" style="padding:18px 24px">
+                    <div class="graph-legend">
+                        <div class="graph-legend-item"><div class="graph-legend-dot" style="background:#00E5FF"></div>Variable node</div>
+                        <div class="graph-legend-item"><div class="graph-legend-dot" style="background:rgba(0,229,255,0.3);border:2px solid #00E5FF"></div>Arc consistent</div>
+                        <div class="graph-legend-item"><div class="graph-legend-dot" style="background:rgba(244,63,94,0.3);border:2px solid #F43F5E"></div>Conflict</div>
+                        <div class="graph-legend-item"><div class="graph-legend-dot" style="background:rgba(16,185,129,0.3);border:2px solid #10B981"></div>Domain pruned</div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1392,7 +1712,15 @@
         tab.addEventListener('click', function() { showSection(tab.dataset.target); });
     });
     document.querySelectorAll('[data-navigate]').forEach(function(card) {
-        card.addEventListener('click', function() { showSection(card.dataset.navigate); });
+        card.addEventListener('click', function() {
+            showSection(card.dataset.navigate);
+            if (card.dataset.navigate === 'graph') {
+                setTimeout(function() {
+                    var cgCanvas = document.getElementById('cg-canvas');
+                    if (cgCanvas) { var ev = new Event('resize'); window.dispatchEvent(ev); }
+                }, 380);
+            }
+        });
         card.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showSection(card.dataset.navigate); }
         });
@@ -2195,7 +2523,861 @@
         createQueensBoard(8);
         subjects = DEFAULT_SUBJECTS.map(function(s) { return { name:s.name, teacher:s.teacher }; });
         renderSubjectList();
+        initParticles();
+        initTypewriter();
+        initScrollReveal();
+        initHeroStats();
+        initDifficultySelector();
+        initUndoStack();
+        initExportButtons();
+        initConstraintGraph();
     })();
+
+    // ============================================================
+    // A. PARTICLE NETWORK
+    // ============================================================
+    function initParticles() {
+        var canvas = document.getElementById('particle-canvas');
+        if (!canvas) return;
+        var ctx = canvas.getContext('2d');
+        var particles = [], mouse = { x:-999, y:-999 };
+        var W, H;
+
+        function resize() {
+            var hero = canvas.parentElement;
+            W = canvas.width  = hero.offsetWidth;
+            H = canvas.height = hero.offsetHeight || 340;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        canvas.parentElement.addEventListener('mousemove', function(e) {
+            var r = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - r.left;
+            mouse.y = e.clientY - r.top;
+        });
+        canvas.parentElement.addEventListener('mouseleave', function() { mouse.x = -999; mouse.y = -999; });
+
+        for (var i = 0; i < 55; i++) {
+            particles.push({ x: Math.random()*W, y: Math.random()*H,
+                vx: (Math.random()-0.5)*0.5, vy: (Math.random()-0.5)*0.5,
+                r: Math.random()*2+1 });
+        }
+
+        var isDark = function() { return document.documentElement.getAttribute('data-theme') === 'dark'; };
+
+        function draw() {
+            ctx.clearRect(0,0,W,H);
+            var dotCol  = isDark() ? 'rgba(0,229,255,0.6)'  : 'rgba(8,145,178,0.5)';
+            var lineCol = isDark() ? 'rgba(0,229,255,'       : 'rgba(8,145,178,';
+
+            particles.forEach(function(p) {
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0||p.x > W) p.vx *= -1;
+                if (p.y < 0||p.y > H) p.vy *= -1;
+
+                // mouse repel
+                var dx = p.x - mouse.x, dy = p.y - mouse.y;
+                var dist = Math.sqrt(dx*dx+dy*dy);
+                if (dist < 80) { p.x += dx/dist*1.2; p.y += dy/dist*1.2; }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+                ctx.fillStyle = dotCol;
+                ctx.fill();
+            });
+
+            for (var i = 0; i < particles.length; i++) {
+                for (var j = i+1; j < particles.length; j++) {
+                    var dx = particles[i].x - particles[j].x;
+                    var dy = particles[i].y - particles[j].y;
+                    var d  = Math.sqrt(dx*dx+dy*dy);
+                    if (d < 110) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = lineCol + (0.18*(1-d/110)).toFixed(2)+')';
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    // ============================================================
+    // B. TYPEWRITER / GLITCH HERO TITLE
+    // ============================================================
+    function initTypewriter() {
+        var el = document.getElementById('hero-title-text');
+        if (!el) return;
+        var phrases = ['Backtracking Magic','Constraint Solving','Domain Pruning','Logical Deduction','Arc Consistency','Graph Coloring'];
+        var pi = 0, ci = 0, deleting = false, pausing = false;
+
+        function tick() {
+            var target = phrases[pi];
+
+            if (pausing) {
+                pausing = false;
+                deleting = true;
+                setTimeout(tick, 1800);
+                return;
+            }
+
+            if (!deleting) {
+                if (ci < target.length) {
+                    el.textContent = target.slice(0, ++ci);
+                    setTimeout(tick, 72);
+                } else {
+                    pausing = true;
+                    setTimeout(tick, 1400);
+                }
+            } else {
+                if (ci > 0) {
+                    el.textContent = target.slice(0, --ci);
+                    setTimeout(tick, 36);
+                } else {
+                    deleting = false;
+                    pi = (pi + 1) % phrases.length;
+                    setTimeout(tick, 320);
+                }
+            }
+        }
+
+        // Start after a short delay
+        setTimeout(tick, 900);
+    }
+
+    // ============================================================
+    // C. HERO STATS COUNTER
+    // ============================================================
+    function initHeroStats() {
+        var nums = document.querySelectorAll('[data-count]');
+        nums.forEach(function(el) {
+            var target = parseInt(el.getAttribute('data-count'));
+            var start = 0, dur = 1800, step = 16;
+            var inc = target / (dur / step);
+            var timer = setInterval(function() {
+                start += inc;
+                if (start >= target) { start = target; clearInterval(timer); }
+                el.textContent = Math.floor(start) + (el.getAttribute('data-count') === '100' ? '%' : '');
+            }, step);
+        });
+    }
+
+    // ============================================================
+    // D. SCROLL REVEAL
+    // ============================================================
+    function initScrollReveal() {
+        var els = document.querySelectorAll('.reveal');
+        if (!('IntersectionObserver' in window)) {
+            els.forEach(function(e) { e.classList.add('visible'); }); return;
+        }
+        var obs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(en) { if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); } });
+        }, { threshold: 0.12 });
+        els.forEach(function(e) { obs.observe(e); });
+    }
+
+    // ============================================================
+    // E. CONFETTI
+    // ============================================================
+    function launchConfetti() {
+        var canvas = document.getElementById('confetti-canvas');
+        if (!canvas) return;
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        var ctx = canvas.getContext('2d');
+        var pieces = [];
+        var colors = ['#00E5FF','#A855F7','#10B981','#F43F5E','#FB923C','#6366F1','#EAB308'];
+        for (var i = 0; i < 140; i++) {
+            pieces.push({
+                x: canvas.width/2 + (Math.random()-0.5)*200,
+                y: canvas.height/2 + (Math.random()-0.5)*100,
+                vx: (Math.random()-0.5)*14,
+                vy: -(Math.random()*14+4),
+                w: Math.random()*10+5,
+                h: Math.random()*6+3,
+                rot: Math.random()*360,
+                rv: (Math.random()-0.5)*8,
+                col: colors[Math.floor(Math.random()*colors.length)],
+                alpha: 1
+            });
+        }
+        var start = null;
+        function frame(ts) {
+            if (!start) start = ts;
+            var prog = (ts - start) / 2800;
+            if (prog > 1) { ctx.clearRect(0,0,canvas.width,canvas.height); return; }
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            pieces.forEach(function(p) {
+                p.x += p.vx; p.y += p.vy; p.vy += 0.35; p.rot += p.rv;
+                p.alpha = Math.max(0, 1 - prog*1.4);
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rot * Math.PI/180);
+                ctx.fillStyle = p.col;
+                ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+                ctx.restore();
+            });
+            requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+    }
+
+    // ============================================================
+    // F. DIFFICULTY SELECTOR
+    // ============================================================
+    var currentDifficulty = 'easy';
+    var DIFFICULTY_REMOVE = { easy: 30, medium: 45, hard: 55 };
+
+    function initDifficultySelector() {
+        document.querySelectorAll('.diff-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.diff-btn').forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                currentDifficulty = btn.dataset.diff;
+            });
+        });
+    }
+
+    function generateDifficultyPuzzle(diff) {
+        // Start with a solved board then remove cells
+        var base = [
+            [5,3,4,6,7,8,9,1,2],[6,7,2,1,9,5,3,4,8],[1,9,8,3,4,2,5,6,7],
+            [8,5,9,7,6,1,4,2,3],[4,2,6,8,5,3,7,9,1],[7,1,3,9,2,4,8,5,6],
+            [9,6,1,5,3,7,2,8,4],[2,8,7,4,1,9,6,3,5],[3,4,5,2,8,6,1,7,9]
+        ];
+        var board = base.map(function(r) { return r.slice(); });
+        var remove = DIFFICULTY_REMOVE[diff] || 30;
+        var cells = [];
+        for (var i = 0; i < 9; i++) for (var j = 0; j < 9; j++) cells.push([i,j]);
+        cells.sort(function() { return Math.random()-0.5; });
+        for (var k = 0; k < remove; k++) board[cells[k][0]][cells[k][1]] = 0;
+        return board;
+    }
+
+    // Patch loadSudokuSample to use difficulty
+    var _origLoadSample = loadSudokuSample;
+    loadSudokuSample = function() {
+        createSudokuGrid();
+        var puzzle = generateDifficultyPuzzle(currentDifficulty);
+        sudokuGrid.querySelectorAll('.sudoku-cell').forEach(function(cell) {
+            var r = parseInt(cell.dataset.row), c = parseInt(cell.dataset.col);
+            if (puzzle[r][c] !== 0) {
+                cell.value = puzzle[r][c];
+                cell.readOnly = true;
+                cell.classList.add('given');
+            }
+        });
+        showToast(currentDifficulty.charAt(0).toUpperCase()+currentDifficulty.slice(1)+' puzzle loaded!', 'info');
+    };
+    document.getElementById('sudoku-sample-btn').removeEventListener('click', _origLoadSample);
+    document.getElementById('sudoku-sample-btn').addEventListener('click', loadSudokuSample);
+
+    // ============================================================
+    // G. UNDO STACK FOR SUDOKU
+    // ============================================================
+    var undoStack = [];
+
+    function initUndoStack() {
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey||e.metaKey) && e.key === 'z') {
+                e.preventDefault();
+                if (undoStack.length === 0) { showToast('Nothing to undo.', 'info'); return; }
+                var last = undoStack.pop();
+                var cell = getCellEl(last.r, last.c);
+                if (cell && !cell.readOnly) { cell.value = last.val; showToast('Undo.', 'info'); }
+            }
+        });
+        // Intercept cell input to push to undo
+        sudokuGrid.addEventListener('keydown', function(e) {
+            var cell = e.target;
+            if (!cell.classList.contains('sudoku-cell') || cell.readOnly) return;
+            undoStack.push({ r: parseInt(cell.dataset.row), c: parseInt(cell.dataset.col), val: cell.value });
+            if (undoStack.length > 50) undoStack.shift();
+        }, true);
+    }
+
+    // ============================================================
+    // H. METRICS STRIP — patch instant solve to show metrics
+    // ============================================================
+    var _origHandleSolve = handleSudokuSolve;
+    var solveStartTime = 0;
+
+    function showSudokuMetrics(tries, backs, cells, timeMs) {
+        var strip = document.getElementById('sudoku-metrics');
+        document.getElementById('m-tries').textContent = tries;
+        document.getElementById('m-backs').textContent = backs;
+        document.getElementById('m-time').textContent  = timeMs + 'ms';
+        document.getElementById('m-cells').textContent = cells;
+        strip.classList.add('visible');
+    }
+
+    // Wrap handleSudokuSolve to time instant mode
+    document.getElementById('sudoku-solve-btn').removeEventListener('click', handleSudokuSolve);
+    document.getElementById('sudoku-solve-btn').addEventListener('click', function() {
+        if (sudokuSolving) { handleSudokuSolve(); return; } // stop action
+        solveStartTime = Date.now();
+        // Capture initial board BEFORE solving for metrics computation
+        var boardSnapshot = readSudokuBoard();
+        handleSudokuSolve();
+        // detect instant mode finish
+        if (!sudokuStepToggle.checked) {
+            var elapsed = Date.now() - solveStartTime;
+            var result = collectSudokuSteps(boardSnapshot.map(function(r){return r.slice();}));
+            if (result.solved) showSudokuMetrics(result.totalTries, result.totalBacks,
+                result.steps.filter(function(s){return s.type==='place';}).length, elapsed);
+        }
+    });
+
+    // Patch step-mode done to show metrics too
+    var origReplayNext = null; // handled inline below by monkey-patching appendSudokuLog
+    var _origAppendLog = appendSudokuLog;
+    appendSudokuLog = function(msg, cls) {
+        _origAppendLog(msg, cls);
+        if (cls === 'log-ok' && msg.indexOf('Done') !== -1) {
+            var t = document.getElementById('s-tries').textContent;
+            var b = document.getElementById('s-backs').textContent;
+            var c = document.getElementById('s-cells').textContent;
+            showSudokuMetrics(t, b, c, Date.now()-solveStartTime);
+            // confetti is handled by the showToast patch below — no duplicate here
+        }
+    };
+
+    // Confetti on queens solve too
+    var _origShowToast = showToast;
+    showToast = function(msg, type, dur) {
+        _origShowToast(msg, type, dur);
+        if (type === 'success' && (msg.indexOf('Solved') !== -1 || msg.indexOf('solved') !== -1)) {
+            launchConfetti();
+        }
+    };
+
+    // ============================================================
+    // I. EXPORT BUTTONS (html2canvas-free PNG via canvas)
+    // ============================================================
+    function initExportButtons() {
+        document.getElementById('sudoku-export-btn').addEventListener('click', function() {
+            exportElementAsPNG(document.getElementById('sudoku-grid'), 'sudoku-solution.png');
+        });
+        document.getElementById('queens-export-btn').addEventListener('click', function() {
+            exportElementAsPNG(document.getElementById('queens-board'), 'nqueens-solution.png');
+        });
+    }
+
+    function exportElementAsPNG(el, filename) {
+        // Use the Blob URL approach via SVG foreignObject
+        var rect = el.getBoundingClientRect();
+        var W = rect.width, H = rect.height;
+        var data = new XMLSerializer().serializeToString(el.cloneNode(true));
+        var canvas = document.createElement('canvas');
+        canvas.width = W * 2; canvas.height = H * 2;
+        var ctx = canvas.getContext('2d');
+        var img = new Image();
+        var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="'+W*2+'" height="'+H*2+'"><rect width="100%" height="100%" fill="#060A14"/><foreignObject width="'+W*2+'" height="'+H*2+'"><body xmlns="http://www.w3.org/1999/xhtml" style="margin:0;padding:0;background:#060A14;transform:scale(2);transform-origin:top left">'+el.outerHTML+'</body></foreignObject></svg>';
+        var blob = new Blob([svg], {type:'image/svg+xml'});
+        var url  = URL.createObjectURL(blob);
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+            URL.revokeObjectURL(url);
+            var a = document.createElement('a');
+            a.download = filename;
+            a.href = canvas.toDataURL('image/png');
+            a.click();
+        };
+        img.onerror = function() {
+            URL.revokeObjectURL(url);
+            showToast('Export failed — try a different browser.', 'error');
+        };
+        img.src = url;
+        showToast('Exporting image...', 'info');
+    }
+
+    // ============================================================
+    // J. CONSTRAINT GRAPH VISUALIZER
+    // ============================================================
+    function initConstraintGraph() {
+        var canvas = document.getElementById('cg-canvas');
+        if (!canvas) return;
+        var ctx = canvas.getContext('2d');
+        var nodes = [], edges = [], animQueue = [], animTimer = null;
+        var dragging = null, dragOx = 0, dragOy = 0;
+
+        var DEMOS = {
+            map: {
+                nodes:[
+                    {id:'WA',label:'WA',  domain:['R','G','B'],color:null,x:120,y:200},
+                    {id:'NT',label:'NT',  domain:['R','G','B'],color:null,x:280,y:120},
+                    {id:'SA',label:'SA',  domain:['R','G','B'],color:null,x:280,y:260},
+                    {id:'Q', label:'QLD', domain:['R','G','B'],color:null,x:440,y:140},
+                    {id:'NSW',label:'NSW',domain:['R','G','B'],color:null,x:440,y:280},
+                    {id:'V', label:'VIC', domain:['R','G','B'],color:null,x:380,y:370},
+                    {id:'T', label:'TAS', domain:['R','G','B'],color:null,x:380,y:440}
+                ],
+                edges:[['WA','NT'],['WA','SA'],['NT','SA'],['NT','Q'],['SA','Q'],['SA','NSW'],['SA','V'],['Q','NSW'],['NSW','V']]
+            },
+            queens4: {
+                nodes:[
+                    {id:'R1',label:'Row 1',domain:['1','2','3','4'],color:null,x:100,y:100},
+                    {id:'R2',label:'Row 2',domain:['1','2','3','4'],color:null,x:300,y:100},
+                    {id:'R3',label:'Row 3',domain:['1','2','3','4'],color:null,x:500,y:100},
+                    {id:'R4',label:'Row 4',domain:['1','2','3','4'],color:null,x:700,y:100}
+                ],
+                edges:[['R1','R2'],['R1','R3'],['R1','R4'],['R2','R3'],['R2','R4'],['R3','R4']]
+            },
+            sudoku3: {
+                nodes:[
+                    {id:'C1',label:'A1',domain:['1','2','3'],color:null,x:150,y:180},
+                    {id:'C2',label:'A2',domain:['1','2','3'],color:null,x:350,y:100},
+                    {id:'C3',label:'A3',domain:['1','2','3'],color:null,x:550,y:180},
+                    {id:'C4',label:'B1',domain:['1','2','3'],color:null,x:150,y:320},
+                    {id:'C5',label:'B2',domain:['1','2','3'],color:null,x:350,y:320},
+                    {id:'C6',label:'B3',domain:['1','2','3'],color:null,x:550,y:320}
+                ],
+                edges:[['C1','C2'],['C1','C3'],['C2','C3'],['C4','C5'],['C4','C6'],['C5','C6'],['C1','C4'],['C2','C5'],['C3','C6']]
+            },
+            scheduling: {
+                nodes:[
+                    {id:'CS',label:'CS',   domain:['M1','M2','T1','T2'],color:null,x:200,y:150},
+                    {id:'MA',label:'Math', domain:['M1','M2','T1','T2'],color:null,x:450,y:100},
+                    {id:'PH',label:'Phys', domain:['M1','M2','T1','T2'],color:null,x:650,y:200},
+                    {id:'EN',label:'Eng',  domain:['M1','M2','T1','T2'],color:null,x:200,y:320},
+                    {id:'HI',label:'Hist', domain:['M1','M2','T1','T2'],color:null,x:450,y:340}
+                ],
+                edges:[['CS','MA'],['CS','EN'],['MA','PH'],['MA','HI'],['PH','HI'],['EN','HI']]
+            }
+        };
+
+        var NODE_COLORS = {R:'#F43F5E',G:'#10B981',B:'#3B82F6',
+            '1':'#00E5FF','2':'#A855F7','3':'#FB923C','4':'#EAB308',
+            M1:'#00E5FF',M2:'#A855F7',T1:'#10B981',T2:'#FB923C'};
+
+        function resize() {
+            var w = canvas.offsetWidth;
+            var h = canvas.offsetHeight;
+            // If section is hidden, offsetHeight is 0 — use explicit fallback
+            if (h < 10) h = 420;
+            canvas.width  = w || 800;
+            canvas.height = h;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        function loadDemo(name) {
+            var demo = DEMOS[name];
+            if (!demo) return;
+            nodes = demo.nodes.map(function(n) { return Object.assign({},n,{domain:n.domain.slice(),assigned:null,state:'normal'}); });
+            edges = demo.edges.map(function(e) { return {a:e[0],b:e[1],state:'normal'}; });
+            animQueue = []; if (animTimer) { clearTimeout(animTimer); animTimer = null; }
+            document.getElementById('arc-info').textContent = 'Demo loaded. Click "Run Arc Consistency" to start.';
+            render();
+        }
+
+        function getNode(id) { return nodes.find(function(n){return n.id===id;}); }
+
+        function render() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            var isDark = document.documentElement.getAttribute('data-theme')==='dark';
+
+            // edges
+            edges.forEach(function(e) {
+                var a = getNode(e.a), b = getNode(e.b);
+                if (!a||!b) return;
+                ctx.beginPath();
+                ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+                var col = e.state==='active' ? '#00E5FF' : e.state==='pruned' ? '#10B981' : e.state==='conflict' ? '#F43F5E' : (isDark?'rgba(100,140,200,0.2)':'rgba(12,19,34,0.12)');
+                ctx.strokeStyle = col;
+                ctx.lineWidth   = e.state==='active'?2.5:1.5;
+                ctx.stroke();
+            });
+
+            // nodes
+            nodes.forEach(function(n) {
+                var state = n.state || 'normal';
+                var fill  = state==='active'?'rgba(0,229,255,0.25)':state==='pruned'?'rgba(16,185,129,0.25)':state==='conflict'?'rgba(244,63,94,0.25)':(isDark?'rgba(12,18,40,0.7)':'rgba(255,255,255,0.7)');
+                var stroke= state==='active'?'#00E5FF':state==='pruned'?'#10B981':state==='conflict'?'#F43F5E':(isDark?'rgba(0,229,255,0.3)':'rgba(8,145,178,0.35)');
+
+                ctx.beginPath();
+                ctx.arc(n.x,n.y,32,0,Math.PI*2);
+                ctx.fillStyle = fill;
+                ctx.fill();
+                ctx.strokeStyle = stroke;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = isDark?'#E4E9F0':'#0C1322';
+                ctx.font = 'bold 13px sans-serif';
+                ctx.textAlign='center'; ctx.textBaseline='middle';
+                ctx.fillText(n.label, n.x, n.y-8);
+
+                // domain pills
+                ctx.font = '9px sans-serif';
+                ctx.fillStyle = isDark?'rgba(0,229,255,0.7)':'rgba(8,145,178,0.8)';
+                ctx.fillText('{'+n.domain.join(',')+'}', n.x, n.y+9);
+            });
+        }
+
+        // AC-3 animation
+        function runAC3() {
+            if (animTimer) clearTimeout(animTimer);
+            // reset states
+            nodes.forEach(function(n){n.state='normal';n.domain=DEMOS[document.getElementById('graph-demo-select').value].nodes.find(function(x){return x.id===n.id;}).domain.slice();});
+            edges.forEach(function(e){e.state='normal';});
+            render();
+
+            // build queue
+            var queue = [];
+            edges.forEach(function(e){queue.push([e.a,e.b]);queue.push([e.b,e.a]);});
+            var info = document.getElementById('arc-info');
+
+            function step() {
+                if (queue.length===0) {
+                    info.textContent='✓ Arc consistency complete! All domains propagated.';
+                    nodes.forEach(function(n){n.state='pruned';}); render(); return;
+                }
+                var pair = queue.shift();
+                var xi = getNode(pair[0]), xj = getNode(pair[1]);
+                if (!xi||!xj) { animTimer=setTimeout(step,180); return; }
+
+                // highlight edge
+                edges.forEach(function(e){
+                    if((e.a===pair[0]&&e.b===pair[1])||(e.a===pair[1]&&e.b===pair[0]))e.state='active';
+                    else e.state='normal';
+                });
+                xi.state='active'; xj.state='active';
+                info.textContent='Checking arc: '+xi.label+' ↔ '+xj.label+' | Domains: {'+xi.domain.join(',')+'} ↔ {'+xj.domain.join(',')+'}';
+                render();
+
+                // prune: remove values from xi that have no support in xj
+                var removed=false;
+                xi.domain = xi.domain.filter(function(val){
+                    var supported = xj.domain.some(function(v){return v!==val;});
+                    if(!supported){removed=true;} return supported;
+                });
+                if(removed){
+                    xi.state='pruned';
+                    info.textContent='Pruned domain of '+xi.label+' → {'+xi.domain.join(',')+'}';
+                    if(xi.domain.length===0){xi.state='conflict';info.textContent='⚠ Domain of '+xi.label+' is empty — conflict detected!';}
+                }
+                render();
+                animTimer = setTimeout(step, 600);
+            }
+            step();
+        }
+
+        // drag
+        canvas.addEventListener('mousedown', function(e) {
+            var r = canvas.getBoundingClientRect();
+            var mx = e.clientX-r.left, my = e.clientY-r.top;
+            nodes.forEach(function(n) {
+                var dx=n.x-mx,dy=n.y-my;
+                if(Math.sqrt(dx*dx+dy*dy)<32){dragging=n;dragOx=dx;dragOy=dy;}
+            });
+        });
+        canvas.addEventListener('mousemove', function(e) {
+            if(!dragging) return;
+            var r = canvas.getBoundingClientRect();
+            dragging.x = e.clientX-r.left+dragOx;
+            dragging.y = e.clientY-r.top+dragOy;
+            render();
+        });
+        canvas.addEventListener('mouseup', function(){dragging=null;});
+        canvas.addEventListener('mouseleave', function(){dragging=null;});
+
+        document.getElementById('graph-demo-select').addEventListener('change', function() { loadDemo(this.value); });
+        document.getElementById('graph-ac-btn').addEventListener('click', runAC3);
+        document.getElementById('graph-reset-btn').addEventListener('click', function() { loadDemo(document.getElementById('graph-demo-select').value); });
+
+        // Re-resize and render whenever the graph tab becomes visible
+        document.querySelectorAll('.nav-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                if (tab.dataset.target === 'graph') {
+                    setTimeout(function() {
+                        resize();
+                        render();
+                    }, 350); // after transition completes
+                }
+            });
+        });
+
+        loadDemo('map');
+    }
+
+    // ============================================================
+    // K. SUDOKU TIMER
+    // ============================================================
+    var timerInterval = null, timerSeconds = 0, timerRunning = false;
+
+    function formatTime(s) {
+        return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+    }
+    function startTimer() {
+        if (timerRunning) return;
+        timerRunning = true;
+        timerInterval = setInterval(function() {
+            timerSeconds++;
+            document.getElementById('sudoku-timer').textContent = formatTime(timerSeconds);
+        }, 1000);
+    }
+    function stopTimer() {
+        clearInterval(timerInterval); timerRunning = false;
+    }
+    function resetTimer() {
+        stopTimer(); timerSeconds = 0;
+        document.getElementById('sudoku-timer').textContent = '00:00';
+    }
+
+    // Auto-start timer on first cell input
+    sudokuGrid.addEventListener('input', function() { startTimer(); }, { once: false });
+    // Override clearSudoku to also reset timer
+    var _origClearSudoku = clearSudoku;
+    clearSudoku = function() {
+        _origClearSudoku(); resetTimer();
+        document.getElementById('sudoku-metrics').classList.remove('visible');
+    };
+    document.getElementById('sudoku-clear-btn').removeEventListener('click', _origClearSudoku);
+    document.getElementById('sudoku-clear-btn').addEventListener('click', clearSudoku);
+
+    // ============================================================
+    // L. SUDOKU HINT
+    // ============================================================
+    document.getElementById('sudoku-hint-btn').addEventListener('click', function() {
+        var board = readSudokuBoard();
+        var solution = board.map(function(r){return r.slice();});
+        var ok = solveSudoku(solution);
+        if (!ok) { showToast('No solution to hint from.','error'); return; }
+        // find a random empty cell and reveal it
+        var empties = [];
+        sudokuGrid.querySelectorAll('.sudoku-cell').forEach(function(cell) {
+            if (!cell.readOnly && !cell.value) {
+                empties.push(cell);
+            }
+        });
+        if (!empties.length) { showToast('Board already complete!','info'); return; }
+        var cell = empties[Math.floor(Math.random()*empties.length)];
+        var r = parseInt(cell.dataset.row), c = parseInt(cell.dataset.col);
+        cell.value = solution[r][c];
+        cell.classList.add('solved');
+        cell.readOnly = true;
+        playSound('hint');
+        showToast('Hint: cell ('+( r+1)+','+(c+1)+') = '+solution[r][c], 'info');
+        startTimer();
+    });
+
+    // ============================================================
+    // M. SOUND ENGINE (Web Audio API)
+    // ============================================================
+    var soundEnabled = true;
+    var audioCtx = null;
+
+    function getAudioCtx() {
+        if (!audioCtx) {
+            try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return null; }
+        }
+        return audioCtx;
+    }
+
+    function playSound(type) {
+        if (!soundEnabled) return;
+        var ctx = getAudioCtx(); if (!ctx) return;
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        var now = ctx.currentTime;
+        if (type === 'click') {
+            osc.frequency.setValueAtTime(880, now);
+            gain.gain.setValueAtTime(0.04, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now+0.08);
+            osc.start(now); osc.stop(now+0.08);
+        } else if (type === 'success') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523, now);
+            osc.frequency.setValueAtTime(659, now+0.1);
+            osc.frequency.setValueAtTime(784, now+0.2);
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now+0.5);
+            osc.start(now); osc.stop(now+0.5);
+        } else if (type === 'hint') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.setValueAtTime(550, now+0.1);
+            gain.gain.setValueAtTime(0.07, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now+0.25);
+            osc.start(now); osc.stop(now+0.25);
+        } else if (type === 'back') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(220, now);
+            gain.gain.setValueAtTime(0.03, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now+0.06);
+            osc.start(now); osc.stop(now+0.06);
+        }
+    }
+
+    var soundBtn = document.getElementById('sound-toggle');
+    soundBtn.addEventListener('click', function() {
+        soundEnabled = !soundEnabled;
+        soundBtn.querySelector('i').className = soundEnabled ? 'fas fa-volume-high' : 'fas fa-volume-xmark';
+        soundBtn.classList.toggle('muted', !soundEnabled);
+        showToast('Sound ' + (soundEnabled ? 'on' : 'off') + '.', 'info');
+    });
+
+    // Patch sudoku cell clicks for click sound
+    sudokuGrid.addEventListener('focus', function(e) {
+        if (e.target.classList.contains('sudoku-cell')) playSound('click');
+    }, true);
+
+    // Patch confetti+sound on solve
+    var _origLaunch = launchConfetti;
+    launchConfetti = function() { _origLaunch(); playSound('success'); };
+
+    // ============================================================
+    // N. KEYBOARD SHORTCUTS PANEL + GLOBAL SHORTCUTS
+    // ============================================================
+    var shortcutsOverlay = document.getElementById('shortcuts-overlay');
+    document.getElementById('shortcuts-open-btn').addEventListener('click', function() {
+        shortcutsOverlay.classList.add('open');
+    });
+    document.getElementById('shortcuts-close').addEventListener('click', function() {
+        shortcutsOverlay.classList.remove('open');
+    });
+    shortcutsOverlay.addEventListener('click', function(e) {
+        if (e.target === shortcutsOverlay) shortcutsOverlay.classList.remove('open');
+    });
+
+    document.addEventListener('keydown', function(e) {
+        // ? key opens shortcuts
+        if (e.key === '?' && !e.ctrlKey && !e.metaKey) { shortcutsOverlay.classList.toggle('open'); return; }
+        // Escape closes
+        if (e.key === 'Escape') { shortcutsOverlay.classList.remove('open'); return; }
+        if (!e.ctrlKey && !e.metaKey) return;
+        var active = document.querySelector('.section.active');
+        var onSudoku = active && active.id === 'sudoku';
+        switch(e.key) {
+            case 'Enter': if(onSudoku){ e.preventDefault(); handleSudokuSolve(); } break;
+            case 'h': case 'H': if(onSudoku){ e.preventDefault(); document.getElementById('sudoku-hint-btn').click(); } break;
+            case 'r': case 'R': if(onSudoku){ e.preventDefault(); loadSudokuSample(); } break;
+            case 'd': case 'D': if(onSudoku){ e.preventDefault(); clearSudoku(); } break;
+            case 'm': case 'M': e.preventDefault(); soundBtn.click(); break;
+        }
+    });
+
+    // ============================================================
+    // O. MOBILE NUMPAD
+    // ============================================================
+    var activeNumpadCell = null;
+    sudokuGrid.addEventListener('focus', function(e) {
+        if (e.target.classList.contains('sudoku-cell')) activeNumpadCell = e.target;
+    }, true);
+    document.getElementById('sudoku-numpad').addEventListener('click', function(e) {
+        var btn = e.target.closest('.numpad-key'); if (!btn) return;
+        if (!activeNumpadCell || activeNumpadCell.readOnly) return;
+        var num = btn.dataset.num;
+        if (num === '0') {
+            undoStack.push({r:parseInt(activeNumpadCell.dataset.row),c:parseInt(activeNumpadCell.dataset.col),val:activeNumpadCell.value});
+            activeNumpadCell.value = '';
+        } else {
+            undoStack.push({r:parseInt(activeNumpadCell.dataset.row),c:parseInt(activeNumpadCell.dataset.col),val:activeNumpadCell.value});
+            activeNumpadCell.value = num;
+        }
+        playSound('click');
+        startTimer();
+        activeNumpadCell.focus();
+    });
+
+    // ============================================================
+    // P. QUEENS SOLUTION BROWSER
+    // ============================================================
+    var allQueensSolutions = [], currentSolIdx = 0, browserN = 8;
+
+    function showSolutionAt(idx) {
+        if (!allQueensSolutions.length) return;
+        currentSolIdx = Math.max(0, Math.min(idx, allQueensSolutions.length-1));
+        displayQueensSolution(allQueensSolutions[currentSolIdx], browserN);
+        document.getElementById('sol-counter').textContent = (currentSolIdx+1)+' / '+allQueensSolutions.length;
+    }
+
+    document.getElementById('sol-prev-btn').addEventListener('click', function() {
+        showSolutionAt(currentSolIdx - 1); playSound('click');
+    });
+    document.getElementById('sol-next-btn').addEventListener('click', function() {
+        showSolutionAt(currentSolIdx + 1); playSound('click');
+    });
+
+    // Patch queens instant solve to populate browser
+    // Patch queens solve button to also populate solution browser (single listener)
+    document.getElementById('queens-solve-btn').removeEventListener('click', handleQueensSolve);
+    document.getElementById('queens-solve-btn').addEventListener('click', function() {
+        handleQueensSolve();
+        // After a short delay, populate solution browser if solutions were found
+        setTimeout(function() {
+            var n = parseInt(document.getElementById('n-input').value);
+            if (isNaN(n) || n < 1 || queensSolving) return; // skip if step mode still running
+            var sols = solveNQueens(n);
+            if (sols.length > 0) {
+                allQueensSolutions = sols;
+                browserN = n;
+                currentSolIdx = 0;
+                var browser = document.getElementById('sol-browser');
+                browser.classList.add('visible');
+                document.getElementById('sol-counter').textContent = '1 / '+sols.length;
+            }
+        }, 800);
+    });
+
+    // ============================================================
+    // Q. SOLVE HISTORY
+    // ============================================================
+    var solveHistory = JSON.parse(localStorage.getItem('csp-history') || '[]');
+
+    function addToHistory(diff, tries, backs, timeMs) {
+        var entry = {
+            diff: diff,
+            tries: tries,
+            backs: backs,
+            timeMs: timeMs,
+            ts: Date.now()
+        };
+        solveHistory.unshift(entry);
+        if (solveHistory.length > 6) solveHistory.pop();
+        try { localStorage.setItem('csp-history', JSON.stringify(solveHistory)); } catch(e){}
+        renderHistory();
+    }
+
+    function renderHistory() {
+        var list = document.getElementById('solve-history-list');
+        if (!list) return;
+        if (!solveHistory.length) {
+            list.innerHTML = '<div style="font-size:0.78rem;color:var(--fg-muted);opacity:0.6">No solves yet.</div>';
+            return;
+        }
+        list.innerHTML = '';
+        solveHistory.forEach(function(h) {
+            var ago = Math.round((Date.now()-h.ts)/1000);
+            var agoStr = ago < 60 ? ago+'s ago' : Math.round(ago/60)+'m ago';
+            var d = h.diff || 'easy';
+            var div = document.createElement('div');
+            div.className = 'history-entry';
+            div.innerHTML = '<span class="history-badge hb-'+d+'">'+d+'</span>'+
+                '<span class="history-meta">'+h.tries+' tries · '+h.backs+' backtracks · '+agoStr+'</span>'+
+                '<span class="history-time">'+h.timeMs+'ms</span>';
+            list.appendChild(div);
+        });
+    }
+
+    // Hook into metrics display to save history
+    var _origShowMetrics = showSudokuMetrics;
+    showSudokuMetrics = function(tries, backs, cells, timeMs) {
+        _origShowMetrics(tries, backs, cells, timeMs);
+        addToHistory(currentDifficulty, tries, backs, timeMs);
+        stopTimer();
+    };
+
+    // Render on load
+    renderHistory();
 
     </script>
 </body>
