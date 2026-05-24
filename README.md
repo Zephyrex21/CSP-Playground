@@ -22,9 +22,6 @@ https://csp-playground.netlify.app/
 - Constraints
 - Backtracking Algorithm
 
-## 📸 Preview
-(Add screenshots here)
-
 ## 🛠️ Future Improvements
 - Step-by-step visualization
 - CSP algorithm comparison
