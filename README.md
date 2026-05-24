@@ -2,6 +2,9 @@
 
 An interactive web application to explore Constraint Satisfaction Problems (CSP) through visual solvers.
 
+**#Live Demo**
+https://csp-playground.netlify.app/
+
 ## 🚀 Features
 - 🔢 Sudoku Solver (Backtracking)
 - ♛ N-Queens Visualizer
