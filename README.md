@@ -1,31 +1,31 @@
-# 🧠 CSP Playground
+# CSP Playground
 
 An interactive web application to explore Constraint Satisfaction Problems (CSP) through visual solvers.
 
 **#Live Demo**
 https://csp-playground.netlify.app/
 
-## 🚀 Features
-- 🔢 Sudoku Solver (Backtracking)
-- ♛ N-Queens Visualizer
-- 📅 Timetable Generator
-- 🌙 Dark/Light Mode
-- ✨ Smooth animations & UI
+## Features
+- Sudoku Solver (Backtracking)
+- N-Queens Visualizer
+- Timetable Generator
+- Dark/Light Mode
+- Smooth animations & UI
 
-## 🧩 Tech Stack
+## Tech Stack
 - HTML, CSS, JavaScript
 - Pure frontend (no frameworks)
 
-## 🎯 Concepts Covered
+## Concepts Covered
 - Variables
 - Domains
 - Constraints
 - Backtracking Algorithm
 
-## 🛠️ Future Improvements
+## Future Improvements
 - Step-by-step visualization
 - CSP algorithm comparison
 - AI-based heuristics (MRV, Forward Checking)
 
-## 👨‍💻 Author
+## Author
 Saurabh Raj Shekhar
